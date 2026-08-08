@@ -1,0 +1,38 @@
+export const dealers = [
+  {
+    id: 'rohit-malhotra',
+    name: 'Rohit Malhotra',
+    location: 'Sector 85, Faridabad',
+    experience: '8 years',
+    listings: 46,
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'simran-kaur',
+    name: 'Simran Kaur',
+    location: 'Greater Faridabad',
+    experience: '6 years',
+    listings: 38,
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'amit-singh-dealer',
+    name: 'Amit Singh',
+    location: 'Sector 89, Faridabad',
+    experience: '10 years',
+    listings: 61,
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'priya-nair',
+    name: 'Priya Nair',
+    location: 'Sector 86, Faridabad',
+    experience: '5 years',
+    listings: 29,
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=800&auto=format&fit=crop',
+  },
+]
