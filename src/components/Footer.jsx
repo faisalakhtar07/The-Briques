@@ -86,7 +86,7 @@ export default function Footer() {
       <div className="border-t border-paper/10">
         <div className="container-app flex flex-col items-center justify-between gap-3 py-6 text-xs text-paper/50 sm:flex-row">
           <span>© 2026 The Briques Reescotech. All rights reserved.</span>
-          <span>Made for Faridabad & NCR</span>
+          <span>Made for Faisal Akhtar</span>
         </div>
       </div>
     </footer>
