@@ -1,3 +1,4 @@
+import InstallAppButton from "./InstallAppButton.jsx";
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X, Home, Building2, User, LogOut, Bell } from "lucide-react";
@@ -23,7 +24,7 @@ export default function Navbar() {
           <Home className="w-6 h-6 text-emerald-600" />
           The Briques
         </Link>
-
+         <InstallAppButton/> 
         <nav className="hidden md:flex items-center gap-1">
           <NavLink to="/" className={navLink} end>Home</NavLink>
           <NavLink to="/properties" className={navLink}>Properties</NavLink>
