@@ -18,15 +18,15 @@ export default function Hero() {
   const statIcons = [Building2, Sparkles, MapPinned, ShieldCheck];
 
   return (
-    <section className="relative bg-paper text-ink">
+    <section className="relative bg-night-bg text-night-text">
       <div className="relative h-[92vh] min-h-[640px] w-full overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop"
           alt="Builder floor under construction"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-paper/70 via-paper/40 to-paper" />
-        <div className="absolute inset-0 bg-gradient-to-r from-paper/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-night-bg/70 via-night-bg/40 to-night-bg" />
+        <div className="absolute inset-0 bg-gradient-to-r from-night-bg/80 via-transparent to-transparent" />
 
         <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6">
           <motion.span
@@ -53,7 +53,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="mt-6 max-w-md text-sm text-ink-soft"
+            className="mt-6 max-w-md text-sm text-night-soft"
           >
             Verified builder floors across Faridabad &amp; NCR — reviewed by our
             Admin team, connected through local pincode Owners you can trust.
@@ -79,7 +79,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mt-6 flex items-center gap-2 text-xs uppercase tracking-widest text-ink-soft"
+            className="mt-6 flex items-center gap-2 text-xs uppercase tracking-widest text-night-soft"
           >
             <ArrowDown size={14} className="animate-bounce text-emerald-400" /> Scroll
           </motion.div>
@@ -87,7 +87,7 @@ export default function Hero() {
       </div>
 
       {stats.length > 0 && (
-        <div className="border-y border-emerald-500/15 bg-paper-dim">
+        <div className="border-y border-emerald-500/15 bg-night-dim">
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-6 py-10 sm:grid-cols-4">
             {stats.map((s, i) => {
               const Icon = statIcons[i % statIcons.length];
@@ -102,8 +102,8 @@ export default function Hero() {
                 >
                   <Icon size={20} className="text-emerald-400 shrink-0" />
                   <div>
-                    <p className="font-display text-xl font-bold text-ink">{s.value}{s.suffix}</p>
-                    <p className="text-xs text-ink-soft">{s.label}</p>
+                    <p className="font-display text-xl font-bold text-night-text">{s.value}{s.suffix}</p>
+                    <p className="text-xs text-night-soft">{s.label}</p>
                   </div>
                 </motion.div>
               );
@@ -112,7 +112,7 @@ export default function Hero() {
         </div>
       )}
       {total !== null && stats.length === 0 && (
-        <div className="border-y border-emerald-500/15 bg-paper-dim px-6 py-4 text-center text-xs text-ink-soft">
+        <div className="border-y border-emerald-500/15 bg-night-dim px-6 py-4 text-center text-xs text-night-soft">
           {total}+ verified properties available right now
         </div>
       )}
