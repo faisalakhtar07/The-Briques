@@ -1,93 +1,121 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ShieldCheck, MapPin } from "lucide-react";
+import { ArrowDown, Building2, ShieldCheck, MapPinned, Sparkles } from "lucide-react";
 import HeroSearchBar from "./HeroSearchBar.jsx";
 import { getPublicProperties } from "../api/properties.js";
+import { getPublicSettings } from "../api/settings.js";
 
-// Same hero as the original site (badge, heading, stats line, search bar,
-// "List Your Property" pill) — but the property count is live from the
-// database now instead of a hard-coded "500+".
 export default function Hero() {
   const [total, setTotal] = useState(null);
+  const [stats, setStats] = useState([]);
 
   useEffect(() => {
-    getPublicProperties({ limit: 1 })
-      .then(({ data }) => setTotal(data.total))
-      .catch(() => setTotal(null));
+    getPublicProperties({ limit: 1 }).then(({ data }) => setTotal(data.total)).catch(() => {});
+    getPublicSettings().then(({ data }) => setStats(data.settings.stats || [])).catch(() => {});
   }, []);
 
+  const statIcons = [Building2, Sparkles, MapPinned, ShieldCheck];
+
   return (
-    <section className="relative overflow-hidden bg-paper">
-      <div className="pointer-events-none absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-emerald-100/60 blur-3xl" />
-      <div className="mx-auto max-w-7xl relative px-4 grid gap-12 pb-16 pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:pb-24 lg:pt-16">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex flex-col gap-6"
-        >
-          <span className="inline-flex items-center gap-2 w-fit rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-            <ShieldCheck size={14} /> Fresh Builder Floors • Verified Listings • Dealer-Friendly System
-          </span>
+    <section className="relative bg-paper text-ink">
+      <div className="relative h-[92vh] min-h-[640px] w-full overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop"
+          alt="Builder floor under construction"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-paper/70 via-paper/40 to-paper" />
+        <div className="absolute inset-0 bg-gradient-to-r from-paper/80 via-transparent to-transparent" />
 
-          <h1 className="max-w-xl text-4xl font-display font-bold leading-[1.1] tracking-tight text-ink sm:text-5xl lg:text-[3.25rem]">
-            India's Dedicated Platform for{" "}
-            <span className="text-emerald-600">Builder Floors</span>
-          </h1>
+        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-400"
+          >
+            The Briques — Builder Floors
+          </motion.span>
 
-          <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
-            <MapPin size={16} className="text-emerald-500" />
-            Searching in <span className="font-semibold text-ink">Faridabad & NCR</span>
-            <span className="mx-1 h-1 w-1 rounded-full bg-ink/30" />
-            <span className="font-semibold text-emerald-600">
-              {total !== null ? `${total}+ Properties Available` : "Properties Available"}
-            </span>
-          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
+            className="max-w-2xl font-display text-5xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl"
+          >
+            We build trust.
+            <br />
+            We create <span className="text-emerald-400">value.</span>
+          </motion.h1>
 
-          <div className="pt-2">
-            <HeroSearchBar />
-          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="mt-6 max-w-md text-sm text-ink-soft"
+          >
+            Verified builder floors across Faridabad &amp; NCR — reviewed by our
+            Admin team, connected through local pincode Owners you can trust.
+          </motion.p>
 
-          <div className="flex flex-wrap items-center gap-4 pt-1">
-            <Link
-              to="/signup?role=seller"
-              className="rounded-full border-2 border-emerald-600 text-emerald-700 font-semibold px-5 py-2.5 hover:bg-emerald-50 transition-colors"
-            >
-              List Your Property
-            </Link>
-            <span className="text-xs text-ink-soft">No brokerage. No fake listings. Ever.</span>
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-3 h-px w-16 bg-emerald-400"
+          />
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-          className="relative hidden lg:block"
-        >
-          <div className="overflow-hidden rounded-xl2 shadow-lift">
-            <img
-              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
-              alt="Premium builder floor residence"
-              className="h-[26rem] w-full object-cover sm:h-[30rem]"
-            />
-          </div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="absolute -bottom-6 -left-6 hidden w-56 rounded-2xl bg-white p-4 shadow-lift sm:block"
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mt-8"
           >
-            <div className="flex items-center gap-2 text-emerald-600">
-              <ShieldCheck size={16} />
-              <span className="text-xs font-semibold uppercase tracking-wide">Verified Listing</span>
-            </div>
-            <p className="mt-2 text-sm font-semibold text-ink">Admin-approved listing</p>
-            <p className="text-xs text-ink-soft">Every property reviewed before it goes live</p>
+            <HeroSearchBar />
           </motion.div>
-        </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="mt-6 flex items-center gap-2 text-xs uppercase tracking-widest text-ink-soft"
+          >
+            <ArrowDown size={14} className="animate-bounce text-emerald-400" /> Scroll
+          </motion.div>
+        </div>
       </div>
+
+      {stats.length > 0 && (
+        <div className="border-y border-emerald-500/15 bg-paper-dim">
+          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-6 py-10 sm:grid-cols-4">
+            {stats.map((s, i) => {
+              const Icon = statIcons[i % statIcons.length];
+              return (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
+                  className="flex items-center gap-3"
+                >
+                  <Icon size={20} className="text-emerald-400 shrink-0" />
+                  <div>
+                    <p className="font-display text-xl font-bold text-ink">{s.value}{s.suffix}</p>
+                    <p className="text-xs text-ink-soft">{s.label}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      {total !== null && stats.length === 0 && (
+        <div className="border-y border-emerald-500/15 bg-paper-dim px-6 py-4 text-center text-xs text-ink-soft">
+          {total}+ verified properties available right now
+        </div>
+      )}
     </section>
   );
 }
