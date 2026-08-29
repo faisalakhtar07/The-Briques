@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyProperties, createProperty } from "../../api/properties.js";
-import { Upload, X, PlusCircle, IndianRupee } from "lucide-react";
+import { Upload, X, PlusCircle, IndianRupee, AlertTriangle } from "lucide-react";
 
 const MAX_PHOTOS = 5;
 
@@ -17,8 +17,17 @@ export default function SellerDashboard() {
   const [properties, setProperties] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
-  const load = () => getMyProperties().then(({ data }) => setProperties(data.properties)).finally(() => setLoading(false));
+  const load = () => {
+    setLoadError("");
+    getMyProperties()
+      .then(({ data }) => setProperties(data.properties))
+      .catch((err) => {
+        setLoadError(err.response?.data?.message || err.message || "Could not load your properties.");
+      })
+      .finally(() => setLoading(false));
+  };
   useEffect(() => { load(); }, []);
 
   return (
@@ -45,6 +54,14 @@ export default function SellerDashboard() {
       <h2 className="text-lg font-display font-semibold mt-10 mb-4">Your Properties</h2>
       {loading ? (
         <p className="text-ink-soft text-sm">Loading...</p>
+      ) : loadError ? (
+        <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+          <div>
+            <p className="font-medium">Couldn't load your properties.</p>
+            <p className="text-xs mt-1">{loadError}</p>
+          </div>
+        </div>
       ) : properties.length === 0 ? (
         <p className="text-ink-soft text-sm">You haven't listed any property yet.</p>
       ) : (
