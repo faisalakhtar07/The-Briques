@@ -48,7 +48,7 @@ export default function HeroSearchBar() {
   return (
     <form
       onSubmit={handleSearch}
-      className="grid w-full grid-cols-1 gap-3 rounded-2xl border border-white/30 bg-white/25 p-3 shadow-lift backdrop-blur-xl sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto] lg:p-2.5"
+      className="grid w-full grid-cols-1 gap-3 rounded-2xl border border-white/30 bg-white/25 p-3 shadow-lift sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto] lg:p-2.5"
     >
       <label className="flex items-center gap-2 rounded-xl px-3 py-3 hover:bg-white/15 lg:border-r lg:border-white/25">
         <MapPin size={17} className="shrink-0 text-emerald-500" />
