@@ -99,7 +99,7 @@ export default function SellerDashboard() {
 function PropertyForm({ onCreated }) {
   const [form, setForm] = useState({
     title: "", description: "", rooms: 1, address: "", pincode: "", area: "",
-    propertyType: "rent", sellerPrice: 8000, discount: 0,
+    propertyType: "rent", sellerPrice: 3000, discount: 0,
   });
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
@@ -120,8 +120,8 @@ function PropertyForm({ onCreated }) {
   const submit = async (e) => {
     e.preventDefault();
     setError("");
-    if (Number(form.sellerPrice) < 8000) {
-      setError("Minimum property price is ₹8,000.");
+    if (Number(form.sellerPrice) < 3000) {
+      setError("Minimum property price is ₹3,000.");
       return;
     }
     setSubmitting(true);
@@ -157,7 +157,7 @@ function PropertyForm({ onCreated }) {
             <option value="sell">Sell</option>
           </select>
         </div>
-        <Field label="Your price (₹, min 8,000)" type="number" min={8000} required value={form.sellerPrice}
+        <Field label="Your price (₹, min 3,000)" type="number" min={3000} required value={form.sellerPrice}
           onChange={(v) => setForm({ ...form, sellerPrice: v })} />
         <Field label="Discount % (optional)" type="number" min={0} max={100} value={form.discount}
           onChange={(v) => setForm({ ...form, discount: v })} />
