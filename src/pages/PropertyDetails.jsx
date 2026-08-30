@@ -16,7 +16,11 @@ export default function PropertyDetails() {
   useEffect(() => {
     getPropertyById(id)
       .then(({ data }) => setProperty(data.property))
-      .catch(() => setError("Property not found or no longer available."));
+      .catch((err) => {
+        const status = err.response?.status ?? "no response (network/CORS error)";
+        const message = err.response?.data?.message || err.message;
+        setError(`${message} (status: ${status})`);
+      });
   }, [id]);
 
   if (error) return <div className="mx-auto max-w-3xl px-4 py-16 text-center text-ink-soft">{error}</div>;
