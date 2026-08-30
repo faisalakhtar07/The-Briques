@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { Building2, ChevronRight } from "lucide-react";
 
 // RIVR-style corner "cutout" glass card (Documentation card), ported to
-// Briques — links to the "How It Works" section instead of docs.
-// The SVG corner masks are the exact technique from the reference, just
-// recolored to match Briques' paper background.
+// Briques — smoothly scrolls to the "How It Works" section further down
+// this same page, instead of navigating away.
 export default function BottomRightCornerCard() {
+  const scrollToHowItWorks = (e) => {
+    e.preventDefault();
+    document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
@@ -33,13 +36,14 @@ export default function BottomRightCornerCard() {
 
       <div className="flex flex-col gap-0.5">
         <span className="text-[16px] md:text-[20px] font-semibold text-ink">How It Works</span>
-        <Link
-          to="/properties"
+        <a
+          href="#how-it-works"
+          onClick={scrollToHowItWorks}
           className="flex items-center gap-1 text-ink-soft cursor-pointer hover:text-emerald-700 transition-colors w-fit"
         >
           <span className="text-[12px] md:text-[15px] font-normal">See the process</span>
           <ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
-        </Link>
+        </a>
       </div>
     </motion.div>
   );

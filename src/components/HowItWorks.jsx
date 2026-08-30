@@ -12,7 +12,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-16 bg-white">
+    <section id="how-it-works" className="py-16 bg-white">
       <div className="mx-auto max-w-7xl px-4 flex flex-col items-center gap-14">
         <SectionHeading eyebrow="Process" title="How It Works" subtitle="A simple, transparent process that benefits everyone in the ecosystem." />
         <div className="relative grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
