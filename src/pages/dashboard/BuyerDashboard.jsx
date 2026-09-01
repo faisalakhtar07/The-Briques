@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyTransactions } from "../../api/payments.js";
 import { getMyNotifications } from "../../api/notifications.js";
@@ -7,8 +7,6 @@ import { Bell, Receipt } from "lucide-react";
 
 export default function BuyerDashboard() {
   const { user } = useAuth();
-  const [searchParams] = useSearchParams();
-  const contactPropertyId = searchParams.get("contact");
   const [transactions, setTransactions] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
@@ -21,13 +19,6 @@ export default function BuyerDashboard() {
     <div className="mx-auto max-w-4xl px-4 py-8">
       <h1 className="text-2xl font-display font-bold mb-1">Welcome, {user?.name?.split(" ")[0]}</h1>
       <p className="text-ink-soft text-sm mb-8">Track your transactions and notifications here.</p>
-
-      {contactPropertyId && (
-        <div className="bg-gold-50 border border-gold-400/40 rounded-xl2 p-4 mb-6 text-sm text-ink">
-          To proceed with this property, our platform will connect you with the seller through a secure flow —
-          seller contact details are never shared directly. Full checkout/payment flow coming to this dashboard.
-        </div>
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl2 shadow-card p-5">

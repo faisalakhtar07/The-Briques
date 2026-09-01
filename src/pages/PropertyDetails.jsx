@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { BedDouble, MapPin, Tag, ShieldCheck } from "lucide-react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2 } from "lucide-react";
 import { getPropertyById } from "../api/properties.js";
+import { createPaymentOrder, verifyPayment } from "../api/payments.js";
+import { loadRazorpayScript } from "../hooks/useRazorpay.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 // This page NEVER receives or displays a seller phone number — the API
@@ -9,9 +11,13 @@ import { useAuth } from "../context/AuthContext.jsx";
 export default function PropertyDetails() {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [property, setProperty] = useState(null);
   const [activeImg, setActiveImg] = useState(0);
   const [error, setError] = useState("");
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState("");
+  const [paid, setPaid] = useState(false);
 
   useEffect(() => {
     getPropertyById(id)
@@ -29,6 +35,62 @@ export default function PropertyDetails() {
   const finalPrice = property.discount
     ? Math.round(property.displayPrice * (1 - property.discount / 100))
     : property.displayPrice;
+
+  // Full buy/book flow: create a Razorpay order on our backend, open the
+  // Razorpay checkout modal, then verify the signature on our backend so
+  // the Transaction/Payment records are only marked complete after a real,
+  // verified payment — never just because the modal closed.
+  const handleBuyNow = async () => {
+    setPayError("");
+    setPaying(true);
+    try {
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        setPayError("Could not load the payment gateway. Check your connection and try again.");
+        return;
+      }
+
+      const { data: order } = await createPaymentOrder(property._id);
+
+      const razorpay = new window.Razorpay({
+        key: order.keyId,
+        amount: order.order.amount,
+        currency: order.order.currency,
+        name: "The Briques",
+        description: property.title,
+        order_id: order.order.id,
+        prefill: { name: user.name, email: user.email },
+        theme: { color: "#0E6E4F" },
+        handler: async (response) => {
+          try {
+            await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              paymentId: order.paymentId,
+            });
+            setPaid(true);
+          } catch (err) {
+            setPayError(err.response?.data?.message || "Payment succeeded but verification failed. Contact support with your payment ID.");
+          }
+        },
+        modal: {
+          ondismiss: () => setPaying(false),
+        },
+      });
+
+      razorpay.on("payment.failed", (resp) => {
+        setPayError(resp.error?.description || "Payment failed. Please try again.");
+        setPaying(false);
+      });
+
+      razorpay.open();
+    } catch (err) {
+      setPayError(err.response?.data?.message || "Could not start payment. Please try again.");
+    } finally {
+      setPaying(false);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -79,19 +141,32 @@ export default function PropertyDetails() {
           </p>
         )}
 
-        {user?.role === "buyer" ? (
-          <Link
-            to={`/dashboard/buyer?contact=${property._id}`}
-            className="mt-6 block text-center rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700"
-          >
-            Contact / Proceed
-          </Link>
+        {paid ? (
+          <div className="mt-6 flex flex-col items-center gap-2 rounded-xl bg-emerald-50 p-4 text-center">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+            <p className="font-semibold text-emerald-800">Payment successful!</p>
+            <p className="text-xs text-ink-soft">
+              We've notified the Owner for your area. Track this in your{" "}
+              <Link to="/dashboard/buyer" className="text-emerald-700 underline">dashboard</Link>.
+            </p>
+          </div>
+        ) : user?.role === "buyer" ? (
+          <>
+            {payError && <p className="mt-4 text-sm text-red-600">{payError}</p>}
+            <button
+              onClick={handleBuyNow}
+              disabled={paying}
+              className="mt-6 w-full flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700 disabled:opacity-60"
+            >
+              {paying ? <><Loader2 className="w-4 h-4 animate-spin" /> Opening payment...</> : "Buy Now"}
+            </button>
+          </>
         ) : (
           <Link
             to="/login"
             className="mt-6 block text-center rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700"
           >
-            Login as Buyer to Contact
+            Login as Buyer to Purchase
           </Link>
         )}
         <p className="text-xs text-ink-soft text-center mt-3">
