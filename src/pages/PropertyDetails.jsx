@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2 } from "lucide-react";
 import { getPropertyById } from "../api/properties.js";
-import { createPaymentOrder, verifyPayment } from "../api/payments.js";
-import { loadRazorpayScript } from "../hooks/useRazorpay.js";
+import { requestBooking } from "../api/bookings.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 // This page NEVER receives or displays a seller phone number — the API
 // endpoint it calls (public /properties/:id) doesn't return one at all.
+// There's also no payment here: "Request to Book" only notifies Admin and
+// the pincode's Owner (with the buyer's own registered contact) — they
+// relay the confirmed booking to the Seller through the platform, without
+// ever handing the Seller the buyer's number directly.
 export default function PropertyDetails() {
   const { id } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [property, setProperty] = useState(null);
   const [activeImg, setActiveImg] = useState(0);
   const [error, setError] = useState("");
-  const [paying, setPaying] = useState(false);
-  const [payError, setPayError] = useState("");
-  const [paid, setPaid] = useState(false);
+  const [requesting, setRequesting] = useState(false);
+  const [requestError, setRequestError] = useState("");
+  const [requested, setRequested] = useState(false);
 
   useEffect(() => {
     getPropertyById(id)
@@ -36,59 +38,16 @@ export default function PropertyDetails() {
     ? Math.round(property.displayPrice * (1 - property.discount / 100))
     : property.displayPrice;
 
-  // Full buy/book flow: create a Razorpay order on our backend, open the
-  // Razorpay checkout modal, then verify the signature on our backend so
-  // the Transaction/Payment records are only marked complete after a real,
-  // verified payment — never just because the modal closed.
-  const handleBuyNow = async () => {
-    setPayError("");
-    setPaying(true);
+  const handleRequestBooking = async () => {
+    setRequestError("");
+    setRequesting(true);
     try {
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        setPayError("Could not load the payment gateway. Check your connection and try again.");
-        return;
-      }
-
-      const { data: order } = await createPaymentOrder(property._id);
-
-      const razorpay = new window.Razorpay({
-        key: order.keyId,
-        amount: order.order.amount,
-        currency: order.order.currency,
-        name: "The Briques",
-        description: property.title,
-        order_id: order.order.id,
-        prefill: { name: user.name, email: user.email },
-        theme: { color: "#0E6E4F" },
-        handler: async (response) => {
-          try {
-            await verifyPayment({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              paymentId: order.paymentId,
-            });
-            setPaid(true);
-          } catch (err) {
-            setPayError(err.response?.data?.message || "Payment succeeded but verification failed. Contact support with your payment ID.");
-          }
-        },
-        modal: {
-          ondismiss: () => setPaying(false),
-        },
-      });
-
-      razorpay.on("payment.failed", (resp) => {
-        setPayError(resp.error?.description || "Payment failed. Please try again.");
-        setPaying(false);
-      });
-
-      razorpay.open();
+      await requestBooking(property._id);
+      setRequested(true);
     } catch (err) {
-      setPayError(err.response?.data?.message || "Could not start payment. Please try again.");
+      setRequestError(err.response?.data?.message || "Could not send your request. Please try again.");
     } finally {
-      setPaying(false);
+      setRequesting(false);
     }
   };
 
@@ -141,32 +100,39 @@ export default function PropertyDetails() {
           </p>
         )}
 
-        {paid ? (
+        {property.isBooked ? (
+          <div className="mt-6 rounded-xl bg-paper-dim p-4 text-center text-sm text-ink-soft">
+            This property has already been booked.
+          </div>
+        ) : requested ? (
           <div className="mt-6 flex flex-col items-center gap-2 rounded-xl bg-emerald-50 p-4 text-center">
             <CheckCircle2 className="w-8 h-8 text-emerald-600" />
-            <p className="font-semibold text-emerald-800">Payment successful!</p>
+            <p className="font-semibold text-emerald-800">Request sent!</p>
             <p className="text-xs text-ink-soft">
-              We've notified the Owner for your area. Track this in your{" "}
+              Our team will review and get in touch with you. Track this in your{" "}
               <Link to="/dashboard/buyer" className="text-emerald-700 underline">dashboard</Link>.
             </p>
           </div>
         ) : user?.role === "buyer" ? (
           <>
-            {payError && <p className="mt-4 text-sm text-red-600">{payError}</p>}
+            {requestError && <p className="mt-4 text-sm text-red-600">{requestError}</p>}
             <button
-              onClick={handleBuyNow}
-              disabled={paying}
+              onClick={handleRequestBooking}
+              disabled={requesting}
               className="mt-6 w-full flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700 disabled:opacity-60"
             >
-              {paying ? <><Loader2 className="w-4 h-4 animate-spin" /> Opening payment...</> : "Buy Now"}
+              {requesting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending request...</> : "Request to Book"}
             </button>
+            <p className="text-xs text-ink-soft text-center mt-2">
+              We'll share your registered phone number with our team only — never with the Seller directly.
+            </p>
           </>
         ) : (
           <Link
             to="/login"
             className="mt-6 block text-center rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700"
           >
-            Login as Buyer to Purchase
+            Login as Buyer to Request
           </Link>
         )}
         <p className="text-xs text-ink-soft text-center mt-3">
