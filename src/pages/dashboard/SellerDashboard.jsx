@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyProperties, createProperty } from "../../api/properties.js";
+import { getPublicSettings } from "../../api/settings.js";
 import { Upload, X, PlusCircle, IndianRupee, AlertTriangle } from "lucide-react";
 
 const MAX_PHOTOS = 5;
@@ -78,7 +79,9 @@ export default function SellerDashboard() {
                     {p.status}
                   </span>
                 </div>
-                <p className="text-ink-soft text-sm">{p.pincode} · {p.propertyType === "rent" ? "Rent" : "Sale"}</p>
+                <p className="text-ink-soft text-sm">
+                  {p.pincode} · {p.propertyType === "rent" ? "Rent" : p.propertyType === "event" ? "Event Space (per day)" : "Sale"}
+                </p>
                 {p.rejectionReason && <p className="text-red-600 text-xs mt-1">Reason: {p.rejectionReason}</p>}
               </div>
               <div className="text-right">
@@ -97,13 +100,28 @@ export default function SellerDashboard() {
 }
 
 function PropertyForm({ onCreated }) {
+  const [minPrice, setMinPrice] = useState(8000);
   const [form, setForm] = useState({
     title: "", description: "", rooms: 1, address: "", pincode: "", area: "",
-    propertyType: "rent", sellerPrice: 3000, discount: 0,
+    propertyType: "rent", sellerPrice: 8000, discount: 0,
   });
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const isEvent = form.propertyType === "event";
+
+  useEffect(() => {
+    getPublicSettings()
+      .then(({ data }) => {
+        const min = data.settings.minPropertyPrice;
+        if (min) {
+          setMinPrice(min);
+          setForm((prev) => ({ ...prev, sellerPrice: min }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleFiles = (fileList) => {
     const incoming = Array.from(fileList);
@@ -120,14 +138,19 @@ function PropertyForm({ onCreated }) {
   const submit = async (e) => {
     e.preventDefault();
     setError("");
-    if (Number(form.sellerPrice) < 3000) {
-      setError("Minimum property price is ₹3,000.");
+    if (Number(form.sellerPrice) < minPrice) {
+      setError(`Minimum property price is ₹${minPrice.toLocaleString("en-IN")}.`);
       return;
     }
     setSubmitting(true);
     try {
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+      Object.entries(form).forEach(([k, v]) => {
+        // Event spaces don't have a meaningful room count — send 0 rather
+        // than whatever leftover value was in the form.
+        if (k === "rooms" && isEvent) fd.append(k, 0);
+        else fd.append(k, v);
+      });
       images.forEach((img) => fd.append("images", img));
       await createProperty(fd);
       onCreated();
@@ -144,7 +167,9 @@ function PropertyForm({ onCreated }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Title" required value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
-        <Field label="Rooms" type="number" min={0} required value={form.rooms} onChange={(v) => setForm({ ...form, rooms: v })} />
+        {!isEvent && (
+          <Field label="Rooms" type="number" min={0} required value={form.rooms} onChange={(v) => setForm({ ...form, rooms: v })} />
+        )}
         <Field label="Address" required value={form.address} onChange={(v) => setForm({ ...form, address: v })} className="sm:col-span-2" />
         <Field label="Pincode" required value={form.pincode} onChange={(v) => setForm({ ...form, pincode: v })} />
         <Field label="Area" value={form.area} onChange={(v) => setForm({ ...form, area: v })} />
@@ -153,15 +178,24 @@ function PropertyForm({ onCreated }) {
           <label className="text-sm font-medium">Property Type</label>
           <select value={form.propertyType} onChange={(e) => setForm({ ...form, propertyType: e.target.value })}
             className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm">
-            <option value="rent">Rent</option>
+            <option value="rent">Rent (monthly)</option>
             <option value="sell">Sell</option>
+            <option value="event">Event Space (per day — wedding hall etc.)</option>
           </select>
         </div>
-        <Field label="Your price (₹, min 3,000)" type="number" min={3000} required value={form.sellerPrice}
+        <Field label={`Your price (₹${isEvent ? "/day" : ""}, min ${minPrice.toLocaleString("en-IN")})`}
+          type="number" min={minPrice} required value={form.sellerPrice}
           onChange={(v) => setForm({ ...form, sellerPrice: v })} />
         <Field label="Discount % (optional)" type="number" min={0} max={100} value={form.discount}
           onChange={(v) => setForm({ ...form, discount: v })} />
       </div>
+
+      {isEvent && (
+        <p className="text-xs text-gold-600 bg-gold-50 rounded-lg px-3 py-2">
+          Event spaces are booked by the day. Buyers will pick a specific date when requesting to book —
+          you don't need to enter a room count.
+        </p>
+      )}
 
       <div>
         <label className="text-sm font-medium">Description</label>

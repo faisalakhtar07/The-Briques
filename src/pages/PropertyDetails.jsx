@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2 } from "lucide-react";
+import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2, CalendarDays } from "lucide-react";
 import { getPropertyById } from "../api/properties.js";
 import { requestBooking } from "../api/bookings.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 // This page NEVER receives or displays a seller phone number — the API
 // endpoint it calls (public /properties/:id) doesn't return one at all.
-// There's also no payment here: "Request to Book" only notifies Admin and
-// the pincode's Owner (with the buyer's own registered contact) — they
-// relay the confirmed booking to the Seller through the platform, without
-// ever handing the Seller the buyer's number directly.
+// No payment happens here either — "Request to Book" only notifies Admin
+// and the pincode's Owner (with the buyer's own registered contact).
 export default function PropertyDetails() {
   const { id } = useParams();
   const { user } = useAuth();
   const [property, setProperty] = useState(null);
   const [activeImg, setActiveImg] = useState(0);
   const [error, setError] = useState("");
+  const [eventDate, setEventDate] = useState("");
   const [requesting, setRequesting] = useState(false);
   const [requestError, setRequestError] = useState("");
   const [requested, setRequested] = useState(false);
@@ -34,15 +33,20 @@ export default function PropertyDetails() {
   if (error) return <div className="mx-auto max-w-3xl px-4 py-16 text-center text-ink-soft">{error}</div>;
   if (!property) return <div className="mx-auto max-w-3xl px-4 py-16 text-center text-ink-soft">Loading...</div>;
 
+  const isEvent = property.propertyType === "event";
   const finalPrice = property.discount
     ? Math.round(property.displayPrice * (1 - property.discount / 100))
     : property.displayPrice;
 
   const handleRequestBooking = async () => {
     setRequestError("");
+    if (isEvent && !eventDate) {
+      setRequestError("Please pick a date for this event space.");
+      return;
+    }
     setRequesting(true);
     try {
-      await requestBooking(property._id);
+      await requestBooking(property._id, isEvent ? eventDate : undefined);
       setRequested(true);
     } catch (err) {
       setRequestError(err.response?.data?.message || "Could not send your request. Please try again.");
@@ -50,6 +54,8 @@ export default function PropertyDetails() {
       setRequesting(false);
     }
   };
+
+  const todayStr = new Date().toISOString().split("T")[0];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -79,7 +85,9 @@ export default function PropertyDetails() {
         </p>
 
         <div className="flex gap-6 mt-4 text-sm text-ink-soft">
-          <span className="flex items-center gap-1"><BedDouble className="w-4 h-4" /> {property.rooms} rooms</span>
+          {!isEvent && (
+            <span className="flex items-center gap-1"><BedDouble className="w-4 h-4" /> {property.rooms} rooms</span>
+          )}
           <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600" /> Admin verified</span>
         </div>
 
@@ -88,11 +96,12 @@ export default function PropertyDetails() {
 
       <div className="bg-white rounded-xl2 shadow-card p-6 h-fit sticky top-20">
         <span className="inline-block rounded-full bg-emerald-600 text-white text-xs font-semibold px-3 py-1 uppercase mb-3">
-          {property.propertyType === "rent" ? "For Rent" : "For Sale"}
+          {property.propertyType === "rent" ? "For Rent" : isEvent ? "Event Space" : "For Sale"}
         </span>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-emerald-700">₹{finalPrice?.toLocaleString("en-IN")}</span>
           {property.propertyType === "rent" && <span className="text-ink-soft text-sm">/month</span>}
+          {isEvent && <span className="text-ink-soft text-sm">/day</span>}
         </div>
         {property.discount > 0 && (
           <p className="text-sm text-gold-600 flex items-center gap-1 mt-1">
@@ -100,7 +109,7 @@ export default function PropertyDetails() {
           </p>
         )}
 
-        {property.isBooked ? (
+        {property.isBooked && !isEvent ? (
           <div className="mt-6 rounded-xl bg-paper-dim p-4 text-center text-sm text-ink-soft">
             This property has already been booked.
           </div>
@@ -115,6 +124,20 @@ export default function PropertyDetails() {
           </div>
         ) : user?.role === "buyer" ? (
           <>
+            {isEvent && (
+              <div className="mt-4">
+                <label className="text-sm font-medium text-ink flex items-center gap-1.5">
+                  <CalendarDays className="w-4 h-4 text-emerald-600" /> Choose your date
+                </label>
+                <input
+                  type="date"
+                  min={todayStr}
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+                />
+              </div>
+            )}
             {requestError && <p className="mt-4 text-sm text-red-600">{requestError}</p>}
             <button
               onClick={handleRequestBooking}
