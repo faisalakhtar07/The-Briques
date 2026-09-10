@@ -23,7 +23,7 @@ export default function Footer() {
           <div className="flex items-center gap-2 font-display font-bold text-lg text-white mb-3">
             <Home className="w-5 h-5 text-emerald-400" /> The Briques
           </div>
-          <p className="text-ink-soft max-w-xs">
+          <p className="text-white/60 max-w-xs">
             {settings?.platformName || "The Briques"} — India's trusted platform to buy, sell and rent
             builder-floor properties, area by area.
           </p>
@@ -31,7 +31,7 @@ export default function Footer() {
 
         <div>
           <h4 className="text-white font-semibold mb-3">Platform</h4>
-          <ul className="space-y-2 text-ink-soft">
+          <ul className="space-y-2 text-white/60">
             <li><Link to="/about" className="hover:text-emerald-400">About The Briques</Link></li>
             <li><Link to="/signup?role=buyer" className="hover:text-emerald-400">Buyer</Link></li>
             <li><Link to="/signup?role=seller" className="hover:text-emerald-400">Seller</Link></li>
@@ -41,16 +41,14 @@ export default function Footer() {
 
         <div>
           <h4 className="text-white font-semibold mb-3">Support</h4>
-          <ul className="space-y-2 text-ink-soft">
+          <ul className="space-y-2 text-white/60">
             <li><Link to="/contact" className="hover:text-emerald-400">Contact</Link></li>
-            <li><Link to="/privacy" className="hover:text-emerald-400">Privacy Policy</Link></li>
-            <li><Link to="/terms" className="hover:text-emerald-400">Terms</Link></li>
           </ul>
         </div>
 
         <div>
           <h4 className="text-white font-semibold mb-3">More</h4>
-          <ul className="space-y-2 text-ink-soft">
+          <ul className="space-y-2 text-white/60">
             {footerLinks.map((l) => (
               <li key={l.url}>
                 <a href={l.url} target="_blank" rel="noreferrer" className="hover:text-emerald-400 inline-flex items-center gap-1">
@@ -64,7 +62,7 @@ export default function Footer() {
               {settings.socialLinks.map((s) => {
                 const Icon = ICONS[s.platform?.toLowerCase()] || ExternalLink;
                 return (
-                  <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="text-ink-soft hover:text-emerald-400">
+                  <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="text-white/60 hover:text-emerald-400">
                     <Icon className="w-4 h-4" />
                   </a>
                 );
@@ -73,7 +71,7 @@ export default function Footer() {
           )}
         </div>
       </div>
-      <div className="border-t border-white/10 py-4 text-center text-xs text-ink-soft">
+      <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
         © {new Date().getFullYear()} The Briques. All rights reserved.
       </div>
     </footer>

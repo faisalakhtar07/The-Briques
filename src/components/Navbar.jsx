@@ -24,7 +24,6 @@ export default function Navbar() {
           <Home className="w-6 h-6 text-emerald-600" />
           The Briques
         </Link>
-         <InstallAppButton/> 
         <nav className="hidden md:flex items-center gap-1">
           <NavLink to="/" className={navLink} end>Home</NavLink>
           <NavLink to="/properties" className={navLink}>Properties</NavLink>
@@ -33,6 +32,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <InstallAppButton />
           {user ? (
             <>
               <Link to={dashboardPath} className="flex items-center gap-1.5 text-sm font-medium text-ink-soft hover:text-emerald-600">
