@@ -49,7 +49,7 @@ const whyChoose = [
   { icon: ShieldCheck, title: "Seller Privacy Protected", description: "Seller phone numbers are never shown to buyers — ever." },
   { icon: Users, title: "Transparent Pricing", description: "See exactly what you pay, with full price history on record." },
   { icon: Handshake, title: "Fair, Configurable Commission", description: "Commission is set transparently and can never surprise you." },
-  { icon: MapPinned, title: "Local-First", description: "Deep expertise in Faridabad and surrounding NCR areas, via local Owners." },
+  { icon: MapPinned, title: "Local-First", description: "Deep expertise in Delhi and surrounding NCR areas, via local Owners." },
 ];
 
 export default function Home() {
@@ -72,7 +72,7 @@ export default function Home() {
           <SectionHeading
             eyebrow="Who We Serve"
             title="What is The Briques?"
-            subtitle="A dedicated platform connecting Sellers, Owners, and Buyers for builder floors in Faridabad & NCR. Simple, transparent, and trustworthy."
+            subtitle="A dedicated platform connecting Sellers, Owners, and Buyers for builder floors in Delhi & NCR. Simple, transparent, and trustworthy."
           />
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
             {roles.map((r, i) => <RoleCard key={r.title} {...r} delay={i * 0.1} />)}
@@ -93,7 +93,7 @@ export default function Home() {
 
       <section className="py-16 bg-white">
         <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
-          <SectionHeading eyebrow="Coverage" title="Explore by Location" subtitle="Find builder floors in popular Faridabad & NCR areas." align="left" />
+          <SectionHeading eyebrow="Coverage" title="Explore by Location" subtitle="Find builder floors in popular Delhi & NCR areas." align="left" />
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
             {locations.map((loc, i) => <LocationCard key={loc.id} location={loc} delay={i * 0.05} />)}
           </div>
