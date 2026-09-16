@@ -16,7 +16,6 @@ import Button from "../components/Button.jsx";
 import { locations } from "../data/locations.js";
 import { testimonials } from "../data/testimonials.js";
 import { getPublicProperties } from "../api/properties.js";
-import Howit
 
 // Roles adapted to the real system (Buyer/Seller/Owner) — Builder/Dealer
 // were part of the old mock site's concept and don't exist as roles here.
