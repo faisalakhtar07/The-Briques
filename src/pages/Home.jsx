@@ -8,12 +8,15 @@ import {
   MapPinned,
   Sparkles,
   ArrowRight,
-  Search,
   CheckCircle2,
-  ChevronRight,
+  Search,
+  Home,
+  BadgeCheck,
+  KeyRound,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+import Stats from "../components/Stats.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 import RoleCard from "../components/RoleCard.jsx";
 import HeroSlider from "../components/HeroSlider.jsx";
@@ -21,7 +24,7 @@ import PropertyGrid from "../components/PropertyGrid.jsx";
 import TestimonialCard from "../components/TestimonialCard.jsx";
 import AppPromotion from "../components/AppPromotion.jsx";
 import Button from "../components/Button.jsx";
-import Stats from "../components/Stats.jsx";
+
 import { testimonials } from "../data/testimonials.js";
 import { getPublicProperties } from "../api/properties.js";
 
@@ -34,12 +37,12 @@ const roles = [
     icon: Building2,
     title: "For Sellers",
     description:
-      "List your builder floor and reach genuine buyers through a clean and trusted platform.",
+      "List your builder floor and reach genuine buyers through a trusted platform.",
     features: [
       "Post your property directly",
-      "Admin-reviewed before publishing",
+      "Admin-reviewed listing",
       "No broker spam",
-      "Your phone stays private",
+      "Seller privacy protected",
     ],
     to: "/signup?role=seller",
   },
@@ -49,8 +52,8 @@ const roles = [
     description:
       "Manage your assigned pincode listings and transactions with complete visibility.",
     features: [
-      "Dedicated pincode dashboard",
-      "Track local transactions",
+      "Dedicated dashboard",
+      "Track local listings",
       "Transparent commission",
       "Local-first support",
     ],
@@ -60,45 +63,14 @@ const roles = [
     icon: Users,
     title: "For Buyers",
     description:
-      "Explore genuine builder-floor listings with clear pricing and useful property details.",
+      "Explore carefully presented builder floors with clear property information.",
     features: [
       "Verified listings",
       "Transparent pricing",
-      "Smart property discovery",
+      "Property details",
       "Direct seller connection",
     ],
     to: "/properties",
-  },
-];
-
-/* =========================================================
-   HOW IT WORKS
-========================================================= */
-
-const HOW_IT_WORKS = [
-  {
-    title: "Seller Posts Property",
-    desc: "Sellers add photos, price, location and property details. Every listing goes through a review before becoming visible.",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90",
-  },
-  {
-    title: "Owner & Admin Review",
-    desc: "The assigned Owner and Admin team review the listing so buyers can discover properties with greater confidence.",
-    image:
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90",
-  },
-  {
-    title: "Buyer Explores",
-    desc: "Buyers browse builder floors, compare details and discover properties based on their needs, budget and location.",
-    image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=90",
-  },
-  {
-    title: "Secure Transaction",
-    desc: "The platform keeps the process transparent with clear records for the people involved in the transaction.",
-    image:
-      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1600&q=90",
   },
 ];
 
@@ -111,50 +83,141 @@ const whyChoose = [
     icon: Layers3,
     title: "Only Builder Floors",
     description:
-      "A focused platform built around builder floors instead of trying to list everything in real estate.",
+      "The Briques focuses specifically on builder floors instead of mixing unrelated property categories.",
   },
   {
-    icon: Sparkles,
+    icon: BadgeCheck,
     title: "Admin-Reviewed Listings",
     description:
-      "Listings are reviewed before going live to keep property information cleaner and more reliable.",
+      "Listings go through an admin review process before being presented to buyers.",
   },
   {
     icon: ShieldCheck,
     title: "Seller Privacy",
     description:
-      "Seller contact details stay protected while buyers connect through the platform.",
+      "Seller information is handled carefully so buyers can explore without unnecessary exposure.",
   },
   {
-    icon: Users,
-    title: "Transparent Pricing",
+    icon: Sparkles,
+    title: "Clear Property Details",
     description:
-      "Property information and pricing are presented clearly so buyers know what they are exploring.",
+      "Important property information is presented in a simple and easy-to-understand format.",
   },
   {
     icon: Handshake,
-    title: "Fair Commission",
+    title: "Transparent Process",
     description:
-      "Commission rules can be configured transparently instead of surprising participants later.",
+      "From listing to buyer connection, the platform keeps the process straightforward.",
   },
   {
     icon: MapPinned,
-    title: "Local-First",
+    title: "Local Focus",
     description:
-      "Local Owners help bring area-level understanding to the builder-floor discovery experience.",
+      "Built around local property discovery and the people who understand the market.",
   },
 ];
 
 /* =========================================================
-   SEARCH OPTIONS
+   HOW IT WORKS
 ========================================================= */
 
-const searchItems = [
-  "Location",
-  "Property Type",
-  "Budget",
-  "Bedrooms",
+const HOW_IT_WORKS = [
+  {
+    number: "01",
+    title: "Seller Posts Property",
+    desc:
+      "Sellers add their builder floor with photos, location, price and important property details.",
+    image:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90",
+  },
+  {
+    number: "02",
+    title: "Property Gets Reviewed",
+    desc:
+      "The listing goes through the platform's review process before becoming visible to buyers.",
+    image:
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90",
+  },
+  {
+    number: "03",
+    title: "Buyer Explores",
+    desc:
+      "Buyers browse properties, compare details and find builder floors that match their requirements.",
+    image:
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=90",
+  },
+  {
+    number: "04",
+    title: "Connect & Move Forward",
+    desc:
+      "Once a suitable property is found, buyers and sellers can move forward through the platform.",
+    image:
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=90",
+  },
 ];
+
+/* =========================================================
+   EDITORIAL IMAGE SECTIONS
+========================================================= */
+
+const STORY_SECTIONS = [
+  {
+    eyebrow: "THE BRIQUES",
+    title: "A better way to discover your next home.",
+    text:
+      "Finding a builder floor should not feel complicated. The Briques brings property discovery, clear information and a more focused experience together in one place.",
+    image:
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=90",
+    reverse: false,
+  },
+  {
+    eyebrow: "BUILT AROUND TRUST",
+    title: "Property information, presented with clarity.",
+    text:
+      "From the first property image to the important details that matter, every part of the experience is designed to help you understand a listing before taking the next step.",
+    image:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=90",
+    reverse: true,
+  },
+];
+
+/* =========================================================
+   ANIMATED IMAGE
+   Image comes from bottom to top while scrolling
+========================================================= */
+
+function RevealImage({ src, alt, className = "" }) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-[30px] ${className}`}
+    >
+      <motion.img
+        src={src}
+        alt={alt}
+        initial={{
+          opacity: 0,
+          y: 90,
+          scale: 1.08,
+          clipPath: "inset(100% 0% 0% 0%)",
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          clipPath: "inset(0% 0% 0% 0%)",
+        }}
+        viewport={{ once: true, amount: 0.18 }}
+        transition={{
+          duration: 1,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+    </div>
+  );
+}
 
 /* =========================================================
    HOME
@@ -167,7 +230,10 @@ export default function Home() {
   useEffect(() => {
     getPublicProperties({ limit: 3 })
       .then(({ data }) => {
-        setProperties(data.properties);
+        setProperties(data.properties || []);
+      })
+      .catch(() => {
+        setProperties([]);
       })
       .finally(() => {
         setLoading(false);
@@ -175,153 +241,222 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      {/* =====================================================
-          DISCOVER REAL BUILDER FLOORS
-          This is intentionally FIRST after Header.
-      ====================================================== */}
+    <div className="bg-paper text-ink-900 overflow-hidden">
 
-      <section className="relative overflow-hidden bg-[#11110f] text-white">
-        {/* Background */}
-        <div className="absolute inset-0">
+      {/* =====================================================
+          01. DISCOVER
+          Header ke JUST neeche ye section aayega.
+      ===================================================== */}
+
+      <section className="relative min-h-[760px] md:min-h-[820px] overflow-hidden bg-black">
+
+        {/* Background Image */}
+        <motion.div
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          className="absolute inset-0"
+        >
           <img
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=90"
-            alt=""
-            className="h-full w-full object-cover opacity-45"
+            alt="Builder floor"
+            className="h-full w-full object-cover"
           />
+        </motion.div>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/30" />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-        </div>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/65" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20" />
 
         {/* Content */}
-        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:px-6 md:pb-24 md:pt-20 lg:px-8">
+        <div className="relative z-10 mx-auto flex min-h-[760px] md:min-h-[820px] max-w-7xl flex-col justify-end px-5 pb-10 pt-32 md:px-8 md:pb-16">
+
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65 }}
-            className="max-w-3xl"
+            transition={{ duration: 0.7 }}
+            className="max-w-4xl"
           >
-            {/* Badge */}
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] backdrop-blur-md sm:text-xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              Discover better. Buy with confidence.
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-white" />
+              <span className="text-[10px] font-semibold tracking-[0.22em] text-white uppercase md:text-xs">
+                Discover Better. Buy With Confidence.
+              </span>
             </div>
 
-            {/* Heading */}
-            <h1 className="max-w-3xl font-display text-4xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-4xl font-display text-5xl font-bold leading-[0.94] tracking-tight text-white sm:text-6xl md:text-8xl">
               Discover Real
-              <span className="block text-white/65">
+              <span className="block text-white/55">
                 Builder Floors.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
+            <p className="mt-7 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
               Explore carefully presented builder-floor properties with
               transparent details, local insight and a simpler way to find
               your next home.
             </p>
           </motion.div>
 
-          {/* =================================================
-              SEARCH PANEL
-          ================================================== */}
-
+          {/* Search Box */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="mt-9 max-w-5xl rounded-[28px] border border-white/15 bg-white/[0.10] p-2 shadow-2xl backdrop-blur-xl"
+            transition={{
+              duration: 0.8,
+              delay: 0.25,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-10 w-full rounded-[28px] border border-white/20 bg-black/35 p-2 backdrop-blur-xl md:mt-12 md:rounded-[32px]"
           >
-            <div className="grid grid-cols-1 gap-1 rounded-[22px] bg-white p-2 text-ink-900 sm:grid-cols-2 lg:grid-cols-[1.25fr_1fr_1fr_0.8fr_auto]">
-              {searchItems.map((item, index) => (
-                <button
-                  key={item}
-                  type="button"
-                  className="group flex min-h-[66px] items-center gap-3 rounded-2xl px-4 text-left transition hover:bg-black/[0.035]"
+            <div className="grid grid-cols-1 overflow-hidden rounded-[22px] bg-white md:grid-cols-4 md:rounded-[26px]">
+
+              <div className="flex items-center gap-4 border-b border-black/5 px-5 py-5 md:border-b-0 md:border-r">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-black/5">
+                  <MapPinned size={20} />
+                </div>
+
+                <div>
+                  <p className="text-[10px] font-semibold tracking-[0.16em] text-black/45 uppercase">
+                    Location
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-black">
+                    Delhi & NCR
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 border-b border-black/5 px-5 py-5 md:border-b-0 md:border-r">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-black/5">
+                  <Home size={20} />
+                </div>
+
+                <div>
+                  <p className="text-[10px] font-semibold tracking-[0.16em] text-black/45 uppercase">
+                    Property Type
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-black">
+                    Builder Floor
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 border-b border-black/5 px-5 py-5 md:border-b-0 md:border-r">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-black/5">
+                  <Search size={20} />
+                </div>
+
+                <div>
+                  <p className="text-[10px] font-semibold tracking-[0.16em] text-black/45 uppercase">
+                    Budget
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-black">
+                    Choose Budget
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-2">
+                <Button
+                  to="/properties"
+                  variant="primary"
+                  className="flex h-full min-h-[64px] w-full items-center justify-center gap-2 rounded-[18px]"
                 >
-                  {/* Icon */}
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-black/[0.045]">
-                    {index === 0 ? (
-                      <MapPinned size={18} />
-                    ) : index === 1 ? (
-                      <Building2 size={18} />
-                    ) : index === 2 ? (
-                      <Search size={18} />
-                    ) : (
-                      <Users size={18} />
-                    )}
-                  </span>
-
-                  {/* Text */}
-                  <span>
-                    <span className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-black/45">
-                      {item}
-                    </span>
-
-                    <span className="mt-1 block text-sm font-semibold">
-                      {index === 0
-                        ? "Choose a location"
-                        : index === 1
-                          ? "Builder Floor"
-                          : index === 2
-                            ? "Select your range"
-                            : "Any"}
-                    </span>
-                  </span>
-                </button>
-              ))}
-
-              {/* Explore Button */}
-              <Button to="/properties" variant="primary">
-                <span className="inline-flex items-center gap-2">
                   Explore
-                  <ArrowRight size={16} />
-                </span>
-              </Button>
+                  <ArrowRight size={18} />
+                </Button>
+              </div>
+
             </div>
           </motion.div>
 
           {/* Trust Points */}
-          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/55">
-            <span className="inline-flex items-center gap-2">
-              <CheckCircle2 size={14} />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.55 }}
+            className="mt-6 flex flex-wrap gap-x-7 gap-y-3 text-xs text-white/65 md:text-sm"
+          >
+            <span className="flex items-center gap-2">
+              <CheckCircle2 size={15} />
               Reviewed listings
             </span>
 
-            <span className="inline-flex items-center gap-2">
-              <CheckCircle2 size={14} />
+            <span className="flex items-center gap-2">
+              <CheckCircle2 size={15} />
               Clear property details
             </span>
 
-            <span className="inline-flex items-center gap-2">
-              <CheckCircle2 size={14} />
+            <span className="flex items-center gap-2">
+              <CheckCircle2 size={15} />
               Privacy-focused
             </span>
-          </div>
+          </motion.div>
+
         </div>
       </section>
 
       {/* =====================================================
-          STATS
-      ====================================================== */}
+          02. PROPERTY — VERY EARLY
+          Actual PropertyGrid header ke neeche hi rakha gaya hai.
+      ===================================================== */}
+
+      <section className="bg-white py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
+
+          <div className="mb-10 flex flex-col justify-between gap-5 md:mb-14 md:flex-row md:items-end">
+
+            <div>
+              <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-brand-600 uppercase">
+                Live Inventory
+              </p>
+
+              <h2 className="max-w-2xl font-display text-3xl font-bold tracking-tight text-ink-900 md:text-5xl">
+                Homes worth
+                <span className="text-ink-400"> looking at.</span>
+              </h2>
+            </div>
+
+            <Button
+              to="/properties"
+              variant="secondary"
+              className="w-fit"
+            >
+              View All Properties
+              <ArrowRight size={17} />
+            </Button>
+
+          </div>
+
+          {/* Existing Property System */}
+          <PropertyGrid
+            properties={properties}
+            loading={loading}
+          />
+
+        </div>
+      </section>
+
+      {/* =====================================================
+          03. STATS
+      ===================================================== */}
 
       <Stats />
 
       {/* =====================================================
-          WHAT IS THE BRIQUES?
-      ====================================================== */}
+          04. WHAT IS THE BRIQUES
+      ===================================================== */}
 
       <section className="bg-paper py-20 md:py-28">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-14 px-4">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
+
           <SectionHeading
-            eyebrow="The Platform"
+            eyebrow="Who We Are"
             title="What is The Briques?"
-            subtitle="A dedicated platform connecting Sellers, Owners, and Buyers for builder floors. Simple, transparent, and built around a focused property experience."
+            subtitle="A focused platform connecting Sellers, Owners and Buyers around builder-floor properties."
           />
 
-          <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-3">
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
             {roles.map((role, index) => (
               <RoleCard
                 key={role.title}
@@ -330,42 +465,131 @@ export default function Home() {
               />
             ))}
           </div>
+
         </div>
       </section>
 
       {/* =====================================================
-          WHY CHOOSE THE BRIQUES?
-      ====================================================== */}
+          05. BIG IMAGE STORY SECTION
+          Image bottom -> top reveal
+      ===================================================== */}
 
-      <section className="bg-white px-4 py-20 md:py-28">
+      <section className="bg-white py-20 md:py-32">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
+
+          {STORY_SECTIONS.map((story, index) => (
+            <div
+              key={story.title}
+              className={`grid items-center gap-10 md:grid-cols-2 md:gap-16 ${
+                index !== 0 ? "mt-24 md:mt-36" : ""
+              }`}
+            >
+
+              <div
+                className={
+                  story.reverse
+                    ? "md:order-2"
+                    : "md:order-1"
+                }
+              >
+                <RevealImage
+                  src={story.image}
+                  alt={story.title}
+                  className="h-[420px] md:h-[600px]"
+                />
+              </div>
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 50,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.25,
+                }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className={
+                  story.reverse
+                    ? "md:order-1"
+                    : "md:order-2"
+                }
+              >
+
+                <p className="text-xs font-semibold tracking-[0.22em] text-brand-600 uppercase">
+                  {story.eyebrow}
+                </p>
+
+                <h2 className="mt-5 max-w-xl font-display text-4xl font-bold leading-tight tracking-tight text-ink-900 md:text-6xl">
+                  {story.title}
+                </h2>
+
+                <p className="mt-6 max-w-lg text-base leading-8 text-ink-500 md:text-lg">
+                  {story.text}
+                </p>
+
+                <div className="mt-8">
+                  <Button
+                    to="/properties"
+                    variant="secondary"
+                    className="w-fit"
+                  >
+                    Explore Properties
+                    <ArrowRight size={17} />
+                  </Button>
+                </div>
+
+              </motion.div>
+
+            </div>
+          ))}
+
+        </div>
+      </section>
+
+      {/* =====================================================
+          06. WHY CHOOSE
+      ===================================================== */}
+
+      <section className="bg-paper px-5 py-20 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
-          {/* Heading */}
-          <div className="mb-12 text-center md:mb-16">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+
+          <div className="mx-auto mb-14 max-w-2xl text-center md:mb-20">
+
+            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-brand-600 uppercase">
               Our Edge
             </p>
 
-            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-900 md:text-5xl">
-              Why Choose The Briques?
+            <h2 className="font-display text-4xl font-bold tracking-tight text-ink-900 md:text-6xl">
+              Why Choose
+              <span className="text-ink-400"> The Briques?</span>
             </h2>
 
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink-500 md:text-base">
-              A focused approach to builder-floor discovery, with clarity and
-              trust built into the experience.
+            <p className="mt-5 text-base leading-7 text-ink-500">
+              A more focused way to discover builder floors with clarity,
+              privacy and a simpler property journey.
             </p>
+
           </div>
 
-          {/* Cards */}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+
             {whyChoose.map((item, index) => {
               const Icon = item.icon;
 
               return (
-                <motion.div
+                <motion.article
                   key={item.title}
                   initial={{
                     opacity: 0,
-                    y: 18,
+                    y: 35,
                   }}
                   whileInView={{
                     opacity: 1,
@@ -373,205 +597,226 @@ export default function Home() {
                   }}
                   viewport={{
                     once: true,
-                    margin: "-60px",
+                    amount: 0.2,
                   }}
                   transition={{
-                    duration: 0.45,
-                    delay: index * 0.05,
+                    duration: 0.55,
+                    delay: index * 0.06,
                   }}
-                  className="group relative min-h-[235px] overflow-hidden rounded-[28px] border border-black/[0.07] bg-[#fbfaf7] p-7 shadow-[0_15px_45px_rgba(0,0,0,0.05)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_60px_rgba(0,0,0,0.09)] md:p-8"
+                  className="group relative min-h-[250px] overflow-hidden rounded-[28px] border border-black/8 bg-white p-7 shadow-[0_15px_50px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_70px_rgba(0,0,0,0.09)] md:p-8"
                 >
-                  {/* Number */}
-                  <span className="absolute right-6 top-4 select-none font-display text-6xl font-bold text-black/[0.035]">
+
+                  <span className="absolute right-6 top-4 font-display text-6xl font-bold text-black/[0.035]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
-                  {/* Icon */}
-                  <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-600 transition duration-300 group-hover:scale-105">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-600 transition-transform duration-300 group-hover:scale-110">
                     <Icon size={22} strokeWidth={1.8} />
                   </div>
 
-                  {/* Title */}
-                  <h3 className="font-display text-xl font-bold text-ink-900">
+                  <h3 className="mt-7 font-display text-xl font-bold text-ink-900 md:text-2xl">
                     {item.title}
                   </h3>
 
-                  {/* Description */}
-                  <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-500">
+                  <p className="mt-3 max-w-sm text-sm leading-7 text-ink-500">
                     {item.description}
                   </p>
 
-                  {/* Hover Line */}
                   <div className="absolute bottom-0 left-7 right-7 h-[2px] origin-left scale-x-0 bg-brand-500 transition-transform duration-300 group-hover:scale-x-100" />
-                </motion.div>
+
+                </motion.article>
               );
             })}
+
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          HOW IT WORKS
-          STICKY STACKED IMAGE CARDS
-      ====================================================== */}
+          07. HOW IT WORKS
+          Sticky stacked image cards
+      ===================================================== */}
 
-      <section
-        id="how-it-works"
-        className="bg-[#f5f4f0] px-4 py-20 md:py-28"
-      >
+      <section className="bg-white px-5 py-20 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
-          {/* Heading */}
-          <div className="mb-14 text-center md:mb-20">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+
+          <div className="mx-auto mb-16 max-w-3xl text-center md:mb-24">
+
+            <p className="mb-4 inline-flex rounded-full bg-[#faf6e8] px-4 py-2 text-xs font-semibold tracking-[0.18em] text-[#8f7015] uppercase">
               Simple Process
             </p>
 
-            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-900 md:text-5xl">
+            <h2 className="font-display text-4xl font-bold tracking-tight text-ink-900 md:text-6xl">
               How It Works
             </h2>
 
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink-500 md:text-base">
-              Four clear steps from listing a property to completing the
-              transaction.
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ink-500 md:text-lg">
+              From posting a property to finding the right home, the journey
+              stays simple and transparent.
             </p>
+
           </div>
 
-          {/* Sticky Cards */}
-          <div className="mx-auto max-w-5xl pb-8">
+          <div className="mx-auto max-w-5xl">
+
             {HOW_IT_WORKS.map((step, index) => (
+
               <div
-                key={step.title}
-                className="sticky mb-6 md:mb-8"
+                key={step.number}
+                className="relative mb-7 last:mb-0 md:mb-10"
                 style={{
-                  top: `${88 + index * 18}px`,
                   zIndex: index + 1,
                 }}
               >
-                <motion.article
-                  initial={{
-                    opacity: 0,
-                    y: 25,
+
+                <div
+                  className="sticky"
+                  style={{
+                    top: `${90 + index * 18}px`,
                   }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    margin: "-70px",
-                  }}
-                  transition={{
-                    duration: 0.5,
-                  }}
-                  className="relative min-h-[430px] overflow-hidden rounded-[30px] border border-white/15 bg-black shadow-[0_25px_80px_rgba(0,0,0,0.18)] md:min-h-[520px]"
                 >
-                  {/* Background Image */}
-                  <img
-                    src={step.image}
-                    alt={step.title}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
 
-                  {/* Dark Overlay */}
-                  <div className="absolute inset-0 bg-black/35" />
+                  <motion.article
+                    initial={{
+                      opacity: 0,
+                      y: 100,
+                      clipPath: "inset(100% 0% 0% 0%)",
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                      clipPath: "inset(0% 0% 0% 0%)",
+                    }}
+                    viewport={{
+                      once: true,
+                      amount: 0.12,
+                    }}
+                    transition={{
+                      duration: 0.9,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="relative h-[500px] overflow-hidden rounded-[30px] border border-black/10 bg-black shadow-[0_30px_80px_rgba(0,0,0,0.18)] md:h-[620px] md:rounded-[38px]"
+                  >
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
+                    <img
+                      src={step.image}
+                      alt={step.title}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
 
-                  {/* Content */}
-                  <div className="absolute inset-x-0 bottom-0 p-7 text-white sm:p-10 md:p-12">
-                    {/* Top Row */}
-                    <div className="mb-5 flex items-center justify-between gap-4">
-                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-white/10 font-display text-sm font-bold backdrop-blur-md">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
+                    <div className="absolute inset-0 bg-black/25" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
 
-                      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
-                        Step {index + 1} / 4
+                    <div className="absolute left-5 top-5 md:left-8 md:top-8">
+                      <span className="inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold tracking-[0.12em] text-white backdrop-blur-md">
+                        {step.number}
                       </span>
                     </div>
 
-                    {/* Title */}
-                    <h3 className="max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                      {step.title}
-                    </h3>
+                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
 
-                    {/* Description */}
-                    <p className="mt-4 max-w-2xl text-sm leading-7 text-white/70 md:text-base">
-                      {step.desc}
-                    </p>
+                      <div className="max-w-3xl">
 
-                    {/* Progress */}
-                    <div className="mt-7 h-px w-full max-w-xl bg-white/20">
-                      <div
-                        className="h-full bg-white/80"
-                        style={{
-                          width: `${((index + 1) / 4) * 100}%`,
-                        }}
-                      />
+                        <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-white/60 uppercase">
+                          Step {step.number}
+                        </p>
+
+                        <h3 className="font-display text-3xl font-bold leading-tight text-white md:text-5xl">
+                          {step.title}
+                        </h3>
+
+                        <p className="mt-4 max-w-2xl text-sm leading-7 text-white/75 md:text-base">
+                          {step.desc}
+                        </p>
+
+                      </div>
+
                     </div>
-                  </div>
-                </motion.article>
+
+                  </motion.article>
+
+                </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
       </section>
 
       {/* =====================================================
-          HERO SLIDER
-      ====================================================== */}
+          08. HERO SLIDER
+      ===================================================== */}
 
-      <HeroSlider />
+      <section className="bg-paper py-10 md:py-16">
+        <HeroSlider />
+      </section>
 
       {/* =====================================================
-          LIVE PROPERTY INVENTORY
-      ====================================================== */}
+          09. FEATURED PROPERTY AGAIN
+      ===================================================== */}
 
-      <section className="bg-paper py-20 md:py-28">
-        <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4">
-          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeading
-              eyebrow="Live Inventory"
-              title="More Builder Floors to Explore"
-              subtitle="Browse current property listings and discover a home that fits your needs."
-              align="left"
-            />
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
 
-            <Button to="/properties" variant="secondary">
-              <span className="inline-flex items-center gap-2">
-                View All
-                <ChevronRight size={17} />
-              </span>
+          <div className="mb-12 flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
+
+            <div>
+              <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-brand-600 uppercase">
+                Explore More
+              </p>
+
+              <h2 className="font-display text-3xl font-bold tracking-tight text-ink-900 md:text-5xl">
+                More builder floors.
+              </h2>
+
+              <p className="mt-3 max-w-xl text-sm leading-7 text-ink-500 md:text-base">
+                Browse the complete property collection and discover homes
+                that fit your requirements.
+              </p>
+            </div>
+
+            <Button
+              to="/properties"
+              variant="secondary"
+              className="w-fit"
+            >
+              See All
+              <ArrowRight size={17} />
             </Button>
+
           </div>
 
           <PropertyGrid
             properties={properties}
             loading={loading}
           />
+
         </div>
       </section>
 
       {/* =====================================================
-          APP PROMOTION
-      ====================================================== */}
+          10. APP PROMOTION
+      ===================================================== */}
 
       <AppPromotion />
 
       {/* =====================================================
-          TESTIMONIALS
-      ====================================================== */}
+          11. TESTIMONIALS
+      ===================================================== */}
 
       <section className="bg-paper py-20 md:py-28">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-14 px-4">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
+
           <SectionHeading
             eyebrow="Community"
             title="What People Say"
-            subtitle="From search to keys in hand — stories from the people using the platform."
+            subtitle="From search to keys in hand — real stories from our community."
           />
 
-          <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
             {testimonials.map((testimonial, index) => (
               <TestimonialCard
                 key={testimonial.id}
@@ -580,17 +825,18 @@ export default function Home() {
               />
             ))}
           </div>
+
         </div>
       </section>
 
       {/* =====================================================
-          FINAL CTA
-      ====================================================== */}
+          12. FINAL CTA
+      ===================================================== */}
 
       <motion.section
         initial={{
           opacity: 0,
-          y: 20,
+          y: 30,
         }}
         whileInView={{
           opacity: 1,
@@ -600,34 +846,66 @@ export default function Home() {
           once: true,
         }}
         transition={{
-          duration: 0.5,
+          duration: 0.7,
         }}
-        className="border-y border-black/8 bg-white"
+        className="relative overflow-hidden bg-black"
       >
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-4 py-20 text-center md:py-24">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+
+        <div className="absolute inset-0 opacity-30">
+          <img
+            src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=85"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="absolute inset-0 bg-black/70" />
+
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-5 py-24 text-center md:py-32">
+
+          <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md">
+            <KeyRound size={23} />
+          </div>
+
+          <p className="text-xs font-semibold tracking-[0.22em] text-white/60 uppercase">
             Your Next Move
           </p>
 
-          <h2 className="max-w-2xl font-display text-3xl font-bold tracking-tight text-ink md:text-5xl">
-            Ready to find your next builder floor?
+          <h2 className="mt-4 font-display text-4xl font-bold leading-tight text-white md:text-6xl">
+            Find a builder floor
+            <span className="block text-white/50">
+              that feels like home.
+            </span>
           </h2>
 
-          <p className="max-w-xl text-sm leading-7 text-ink-500">
-            Explore properties or list your own property with The Briques.
+          <p className="mt-6 max-w-2xl text-sm leading-7 text-white/65 md:text-base">
+            Explore verified property listings or list your own property
+            with The Briques.
           </p>
 
-          <div className="mt-2 flex flex-wrap justify-center gap-3">
-            <Button to="/properties" variant="primary">
+          <div className="mt-9 flex flex-wrap justify-center gap-3">
+
+            <Button
+              to="/properties"
+              variant="primary"
+            >
               Browse Properties
+              <ArrowRight size={17} />
             </Button>
 
-            <Button to="/choose-role" variant="secondary">
+            <Button
+              to="/choose-role"
+              variant="secondary"
+            >
               List Your Property
             </Button>
+
           </div>
+
         </div>
+
       </motion.section>
-    </>
+
+    </div>
   );
 }
