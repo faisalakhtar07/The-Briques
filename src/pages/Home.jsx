@@ -131,7 +131,7 @@ export default function Home() {
 
       {HOW_IT_WORKS.map((step, i) => (
         <div
-          key={simple-${step.title}}
+          key={`simple-${step.title}`}
           className="relative pb-12 md:pb-16 last:pb-0"
         >
 
