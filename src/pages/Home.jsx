@@ -10,7 +10,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Search,
-  Home,
+  Home as HomeIcon,
   BadgeCheck,
   KeyRound,
 } from "lucide-react";
@@ -37,10 +37,10 @@ const roles = [
     icon: Building2,
     title: "For Sellers",
     description:
-      "List your builder floor and reach genuine buyers through a trusted platform.",
+      "List your property and reach genuine buyers through a focused builder-floor platform.",
     features: [
       "Post your property directly",
-      "Admin-reviewed listing",
+      "Admin-reviewed listings",
       "No broker spam",
       "Seller privacy protected",
     ],
@@ -50,7 +50,7 @@ const roles = [
     icon: Handshake,
     title: "For Owners",
     description:
-      "Manage your assigned pincode listings and transactions with complete visibility.",
+      "Manage your assigned pincode listings and transactions with clear visibility.",
     features: [
       "Dedicated dashboard",
       "Track local listings",
@@ -63,7 +63,7 @@ const roles = [
     icon: Users,
     title: "For Buyers",
     description:
-      "Explore carefully presented builder floors with clear property information.",
+      "Explore builder floors with clear property information and a simpler discovery experience.",
     features: [
       "Verified listings",
       "Transparent pricing",
@@ -83,37 +83,37 @@ const whyChoose = [
     icon: Layers3,
     title: "Only Builder Floors",
     description:
-      "The Briques focuses specifically on builder floors instead of mixing unrelated property categories.",
+      "The Briques is focused specifically on builder-floor properties.",
   },
   {
     icon: BadgeCheck,
     title: "Admin-Reviewed Listings",
     description:
-      "Listings go through an admin review process before being presented to buyers.",
+      "Listings are reviewed before they are presented to buyers.",
   },
   {
     icon: ShieldCheck,
     title: "Seller Privacy",
     description:
-      "Seller information is handled carefully so buyers can explore without unnecessary exposure.",
+      "Seller information is handled carefully throughout the property journey.",
   },
   {
     icon: Sparkles,
     title: "Clear Property Details",
     description:
-      "Important property information is presented in a simple and easy-to-understand format.",
+      "Important property information is presented in a simple and readable format.",
   },
   {
     icon: Handshake,
     title: "Transparent Process",
     description:
-      "From listing to buyer connection, the platform keeps the process straightforward.",
+      "From listing to buyer connection, the process stays straightforward.",
   },
   {
     icon: MapPinned,
     title: "Local Focus",
     description:
-      "Built around local property discovery and the people who understand the market.",
+      "A local-first approach to discovering builder floors and neighbourhoods.",
   },
 ];
 
@@ -126,7 +126,7 @@ const HOW_IT_WORKS = [
     number: "01",
     title: "Seller Posts Property",
     desc:
-      "Sellers add their builder floor with photos, location, price and important property details.",
+      "Add property photos, price, location, rooms and other important details.",
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90",
   },
@@ -134,7 +134,7 @@ const HOW_IT_WORKS = [
     number: "02",
     title: "Property Gets Reviewed",
     desc:
-      "The listing goes through the platform's review process before becoming visible to buyers.",
+      "The property goes through the platform review process before becoming visible.",
     image:
       "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90",
   },
@@ -142,7 +142,7 @@ const HOW_IT_WORKS = [
     number: "03",
     title: "Buyer Explores",
     desc:
-      "Buyers browse properties, compare details and find builder floors that match their requirements.",
+      "Buyers discover properties and compare the details that matter to them.",
     image:
       "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=90",
   },
@@ -150,40 +150,38 @@ const HOW_IT_WORKS = [
     number: "04",
     title: "Connect & Move Forward",
     desc:
-      "Once a suitable property is found, buyers and sellers can move forward through the platform.",
+      "After finding a suitable property, the buyer and seller can move forward.",
     image:
       "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=90",
   },
 ];
 
 /* =========================================================
-   EDITORIAL IMAGE SECTIONS
+   STORY IMAGE SECTIONS
 ========================================================= */
 
 const STORY_SECTIONS = [
   {
     eyebrow: "THE BRIQUES",
-    title: "A better way to discover your next home.",
-    text:
-      "Finding a builder floor should not feel complicated. The Briques brings property discovery, clear information and a more focused experience together in one place.",
+    title: "A simpler way to discover your next home.",
+    description:
+      "Finding the right builder floor should feel clear and focused. The Briques brings property discovery and useful information together in one experience.",
     image:
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=90",
-    reverse: false,
   },
   {
-    eyebrow: "BUILT AROUND TRUST",
-    title: "Property information, presented with clarity.",
-    text:
-      "From the first property image to the important details that matter, every part of the experience is designed to help you understand a listing before taking the next step.",
+    eyebrow: "BUILT AROUND CLARITY",
+    title: "See the property before you take the next step.",
+    description:
+      "Large property visuals and clear information help buyers understand a listing without unnecessary complexity.",
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=90",
-    reverse: true,
   },
 ];
 
 /* =========================================================
-   ANIMATED IMAGE
-   Image comes from bottom to top while scrolling
+   IMAGE REVEAL
+   Bottom se upar image reveal
 ========================================================= */
 
 function RevealImage({ src, alt, className = "" }) {
@@ -206,15 +204,16 @@ function RevealImage({ src, alt, className = "" }) {
           scale: 1,
           clipPath: "inset(0% 0% 0% 0%)",
         }}
-        viewport={{ once: true, amount: 0.18 }}
+        viewport={{
+          once: true,
+          amount: 0.18,
+        }}
         transition={{
           duration: 1,
           ease: [0.22, 1, 0.36, 1],
         }}
         className="h-full w-full object-cover"
       />
-
-      <div className="absolute inset-0 bg-black/5 pointer-events-none" />
     </div>
   );
 }
@@ -230,7 +229,7 @@ export default function Home() {
   useEffect(() => {
     getPublicProperties({ limit: 3 })
       .then(({ data }) => {
-        setProperties(data.properties || []);
+        setProperties(data?.properties || []);
       })
       .catch(() => {
         setProperties([]);
@@ -241,16 +240,16 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-paper text-ink-900 overflow-hidden">
+    <main className="overflow-hidden bg-paper text-ink-900">
 
       {/* =====================================================
-          01. DISCOVER
-          Header ke JUST neeche ye section aayega.
+          01 — DISCOVER
+          Header ke bilkul neeche
       ===================================================== */}
 
-      <section className="relative min-h-[760px] md:min-h-[820px] overflow-hidden bg-black">
+      <section className="relative min-h-[760px] overflow-hidden bg-black md:min-h-[820px]">
 
-        {/* Background Image */}
+        {/* Background */}
         <motion.div
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
@@ -264,12 +263,11 @@ export default function Home() {
           />
         </motion.div>
 
-        {/* Dark Overlay */}
+        {/* Overlay */}
         <div className="absolute inset-0 bg-black/65" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20" />
 
-        {/* Content */}
-        <div className="relative z-10 mx-auto flex min-h-[760px] md:min-h-[820px] max-w-7xl flex-col justify-end px-5 pb-10 pt-32 md:px-8 md:pb-16">
+        <div className="relative z-10 mx-auto flex min-h-[760px] max-w-7xl flex-col justify-end px-5 pb-10 pt-32 md:min-h-[820px] md:px-8 md:pb-16">
 
           <motion.div
             initial={{ opacity: 0, y: 35 }}
@@ -279,12 +277,13 @@ export default function Home() {
           >
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-white" />
+
               <span className="text-[10px] font-semibold tracking-[0.22em] text-white uppercase md:text-xs">
                 Discover Better. Buy With Confidence.
               </span>
             </div>
 
-            <h1 className="max-w-4xl font-display text-5xl font-bold leading-[0.94] tracking-tight text-white sm:text-6xl md:text-8xl">
+            <h1 className="font-display text-5xl font-bold leading-[0.94] tracking-tight text-white sm:text-6xl md:text-8xl">
               Discover Real
               <span className="block text-white/55">
                 Builder Floors.
@@ -298,18 +297,18 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Search Box */}
+          {/* Search */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               duration: 0.8,
-              delay: 0.25,
+              delay: 0.2,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-10 w-full rounded-[28px] border border-white/20 bg-black/35 p-2 backdrop-blur-xl md:mt-12 md:rounded-[32px]"
+            className="mt-10 rounded-[28px] border border-white/20 bg-black/35 p-2 backdrop-blur-xl md:mt-12 md:rounded-[32px]"
           >
-            <div className="grid grid-cols-1 overflow-hidden rounded-[22px] bg-white md:grid-cols-4 md:rounded-[26px]">
+            <div className="grid overflow-hidden rounded-[22px] bg-white md:grid-cols-4">
 
               <div className="flex items-center gap-4 border-b border-black/5 px-5 py-5 md:border-b-0 md:border-r">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-black/5">
@@ -320,6 +319,7 @@ export default function Home() {
                   <p className="text-[10px] font-semibold tracking-[0.16em] text-black/45 uppercase">
                     Location
                   </p>
+
                   <p className="mt-1 text-sm font-semibold text-black">
                     Delhi & NCR
                   </p>
@@ -328,13 +328,14 @@ export default function Home() {
 
               <div className="flex items-center gap-4 border-b border-black/5 px-5 py-5 md:border-b-0 md:border-r">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-black/5">
-                  <Home size={20} />
+                  <HomeIcon size={20} />
                 </div>
 
                 <div>
                   <p className="text-[10px] font-semibold tracking-[0.16em] text-black/45 uppercase">
                     Property Type
                   </p>
+
                   <p className="mt-1 text-sm font-semibold text-black">
                     Builder Floor
                   </p>
@@ -350,6 +351,7 @@ export default function Home() {
                   <p className="text-[10px] font-semibold tracking-[0.16em] text-black/45 uppercase">
                     Budget
                   </p>
+
                   <p className="mt-1 text-sm font-semibold text-black">
                     Choose Budget
                   </p>
@@ -360,7 +362,7 @@ export default function Home() {
                 <Button
                   to="/properties"
                   variant="primary"
-                  className="flex h-full min-h-[64px] w-full items-center justify-center gap-2 rounded-[18px]"
+                  className="flex min-h-[64px] w-full items-center justify-center gap-2 rounded-[18px]"
                 >
                   Explore
                   <ArrowRight size={18} />
@@ -370,13 +372,9 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Trust Points */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.55 }}
-            className="mt-6 flex flex-wrap gap-x-7 gap-y-3 text-xs text-white/65 md:text-sm"
-          >
+          {/* Trust */}
+          <div className="mt-6 flex flex-wrap gap-x-7 gap-y-3 text-xs text-white/65 md:text-sm">
+
             <span className="flex items-center gap-2">
               <CheckCircle2 size={15} />
               Reviewed listings
@@ -391,14 +389,14 @@ export default function Home() {
               <CheckCircle2 size={15} />
               Privacy-focused
             </span>
-          </motion.div>
 
+          </div>
         </div>
       </section>
 
       {/* =====================================================
-          02. PROPERTY — VERY EARLY
-          Actual PropertyGrid header ke neeche hi rakha gaya hai.
+          02 — PROPERTY
+          Header ke immediately baad actual properties
       ===================================================== */}
 
       <section className="bg-white py-16 md:py-24">
@@ -411,10 +409,17 @@ export default function Home() {
                 Live Inventory
               </p>
 
-              <h2 className="max-w-2xl font-display text-3xl font-bold tracking-tight text-ink-900 md:text-5xl">
+              <h2 className="font-display text-4xl font-bold tracking-tight text-ink-900 md:text-6xl">
                 Homes worth
-                <span className="text-ink-400"> looking at.</span>
+                <span className="text-ink-400">
+                  {" "}looking at.
+                </span>
               </h2>
+
+              <p className="mt-4 max-w-xl text-sm leading-7 text-ink-500 md:text-base">
+                Explore recently listed builder floors and discover your
+                next possible home.
+              </p>
             </div>
 
             <Button
@@ -428,7 +433,7 @@ export default function Home() {
 
           </div>
 
-          {/* Existing Property System */}
+          {/* EXISTING PROPERTY SYSTEM — untouched */}
           <PropertyGrid
             properties={properties}
             loading={loading}
@@ -438,13 +443,13 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          03. STATS
+          03 — STATS
       ===================================================== */}
 
       <Stats />
 
       {/* =====================================================
-          04. WHAT IS THE BRIQUES
+          04 — WHAT IS THE BRIQUES
       ===================================================== */}
 
       <section className="bg-paper py-20 md:py-28">
@@ -453,7 +458,7 @@ export default function Home() {
           <SectionHeading
             eyebrow="Who We Are"
             title="What is The Briques?"
-            subtitle="A focused platform connecting Sellers, Owners and Buyers around builder-floor properties."
+            subtitle="A dedicated platform connecting Sellers, Owners and Buyers around builder-floor properties."
           />
 
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -470,8 +475,8 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          05. BIG IMAGE STORY SECTION
-          Image bottom -> top reveal
+          05 — LARGE IMAGE STORY
+          Bottom to top image animation
       ===================================================== */}
 
       <section className="bg-white py-20 md:py-32">
@@ -481,24 +486,26 @@ export default function Home() {
             <div
               key={story.title}
               className={`grid items-center gap-10 md:grid-cols-2 md:gap-16 ${
-                index !== 0 ? "mt-24 md:mt-36" : ""
+                index > 0 ? "mt-24 md:mt-36" : ""
               }`}
             >
 
+              {/* Image */}
               <div
                 className={
-                  story.reverse
-                    ? "md:order-2"
-                    : "md:order-1"
+                  index % 2 === 0
+                    ? "md:order-1"
+                    : "md:order-2"
                 }
               >
                 <RevealImage
                   src={story.image}
                   alt={story.title}
-                  className="h-[420px] md:h-[600px]"
+                  className="h-[430px] md:h-[620px]"
                 />
               </div>
 
+              {/* Text */}
               <motion.div
                 initial={{
                   opacity: 0,
@@ -517,9 +524,9 @@ export default function Home() {
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className={
-                  story.reverse
-                    ? "md:order-1"
-                    : "md:order-2"
+                  index % 2 === 0
+                    ? "md:order-2"
+                    : "md:order-1"
                 }
               >
 
@@ -532,7 +539,7 @@ export default function Home() {
                 </h2>
 
                 <p className="mt-6 max-w-lg text-base leading-8 text-ink-500 md:text-lg">
-                  {story.text}
+                  {story.description}
                 </p>
 
                 <div className="mt-8">
@@ -555,13 +562,13 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          06. WHY CHOOSE
+          06 — WHY CHOOSE
       ===================================================== */}
 
       <section className="bg-paper px-5 py-20 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
 
-          <div className="mx-auto mb-14 max-w-2xl text-center md:mb-20">
+          <div className="mx-auto mb-14 max-w-3xl text-center md:mb-20">
 
             <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-brand-600 uppercase">
               Our Edge
@@ -569,12 +576,14 @@ export default function Home() {
 
             <h2 className="font-display text-4xl font-bold tracking-tight text-ink-900 md:text-6xl">
               Why Choose
-              <span className="text-ink-400"> The Briques?</span>
+              <span className="text-ink-400">
+                {" "}The Briques?
+              </span>
             </h2>
 
-            <p className="mt-5 text-base leading-7 text-ink-500">
-              A more focused way to discover builder floors with clarity,
-              privacy and a simpler property journey.
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ink-500">
+              A focused property experience designed around builder floors,
+              clear information and a simpler journey.
             </p>
 
           </div>
@@ -633,8 +642,8 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          07. HOW IT WORKS
-          Sticky stacked image cards
+          07 — HOW IT WORKS
+          Sticky / stacked image cards
       ===================================================== */}
 
       <section className="bg-white px-5 py-20 md:px-8 md:py-32">
@@ -651,8 +660,8 @@ export default function Home() {
             </h2>
 
             <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ink-500 md:text-lg">
-              From posting a property to finding the right home, the journey
-              stays simple and transparent.
+              From posting a property to finding the right home, every step
+              stays simple and easy to understand.
             </p>
 
           </div>
@@ -660,10 +669,9 @@ export default function Home() {
           <div className="mx-auto max-w-5xl">
 
             {HOW_IT_WORKS.map((step, index) => (
-
               <div
                 key={step.number}
-                className="relative mb-7 last:mb-0 md:mb-10"
+                className="relative mb-8 last:mb-0 md:mb-10"
                 style={{
                   zIndex: index + 1,
                 }}
@@ -672,7 +680,7 @@ export default function Home() {
                 <div
                   className="sticky"
                   style={{
-                    top: `${90 + index * 18}px`,
+                    top: `${90 + index * 20}px`,
                   }}
                 >
 
@@ -695,7 +703,7 @@ export default function Home() {
                       duration: 0.9,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="relative h-[500px] overflow-hidden rounded-[30px] border border-black/10 bg-black shadow-[0_30px_80px_rgba(0,0,0,0.18)] md:h-[620px] md:rounded-[38px]"
+                    className="relative h-[500px] overflow-hidden rounded-[30px] bg-black shadow-[0_30px_80px_rgba(0,0,0,0.18)] md:h-[620px] md:rounded-[38px]"
                   >
 
                     <img
@@ -705,31 +713,30 @@ export default function Home() {
                     />
 
                     <div className="absolute inset-0 bg-black/25" />
+
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
 
+                    {/* Number */}
                     <div className="absolute left-5 top-5 md:left-8 md:top-8">
                       <span className="inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold tracking-[0.12em] text-white backdrop-blur-md">
                         {step.number}
                       </span>
                     </div>
 
+                    {/* Content */}
                     <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
 
-                      <div className="max-w-3xl">
+                      <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-white/60 uppercase">
+                        Step {step.number}
+                      </p>
 
-                        <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-white/60 uppercase">
-                          Step {step.number}
-                        </p>
+                      <h3 className="font-display text-3xl font-bold leading-tight text-white md:text-5xl">
+                        {step.title}
+                      </h3>
 
-                        <h3 className="font-display text-3xl font-bold leading-tight text-white md:text-5xl">
-                          {step.title}
-                        </h3>
-
-                        <p className="mt-4 max-w-2xl text-sm leading-7 text-white/75 md:text-base">
-                          {step.desc}
-                        </p>
-
-                      </div>
+                      <p className="mt-4 max-w-2xl text-sm leading-7 text-white/75 md:text-base">
+                        {step.desc}
+                      </p>
 
                     </div>
 
@@ -738,43 +745,41 @@ export default function Home() {
                 </div>
 
               </div>
-
             ))}
 
           </div>
-
         </div>
       </section>
 
       {/* =====================================================
-          08. HERO SLIDER
+          08 — HERO SLIDER
       ===================================================== */}
 
-      <section className="bg-paper py-10 md:py-16">
+      <section className="bg-paper py-12 md:py-20">
         <HeroSlider />
       </section>
 
       {/* =====================================================
-          09. FEATURED PROPERTY AGAIN
+          09 — MORE PROPERTIES
       ===================================================== */}
 
       <section className="bg-white py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
 
-          <div className="mb-12 flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
+          <div className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end">
 
             <div>
               <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-brand-600 uppercase">
                 Explore More
               </p>
 
-              <h2 className="font-display text-3xl font-bold tracking-tight text-ink-900 md:text-5xl">
+              <h2 className="font-display text-4xl font-bold tracking-tight text-ink-900 md:text-5xl">
                 More builder floors.
               </h2>
 
               <p className="mt-3 max-w-xl text-sm leading-7 text-ink-500 md:text-base">
                 Browse the complete property collection and discover homes
-                that fit your requirements.
+                that match your requirements.
               </p>
             </div>
 
@@ -798,13 +803,13 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          10. APP PROMOTION
+          10 — APP PROMOTION
       ===================================================== */}
 
       <AppPromotion />
 
       {/* =====================================================
-          11. TESTIMONIALS
+          11 — TESTIMONIALS
       ===================================================== */}
 
       <section className="bg-paper py-20 md:py-28">
@@ -830,7 +835,7 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          12. FINAL CTA
+          12 — FINAL CTA
       ===================================================== */}
 
       <motion.section
@@ -851,11 +856,11 @@ export default function Home() {
         className="relative overflow-hidden bg-black"
       >
 
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=85"
             alt=""
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover opacity-30"
           />
         </div>
 
@@ -879,8 +884,8 @@ export default function Home() {
           </h2>
 
           <p className="mt-6 max-w-2xl text-sm leading-7 text-white/65 md:text-base">
-            Explore verified property listings or list your own property
-            with The Briques.
+            Explore property listings or list your own builder floor with
+            The Briques.
           </p>
 
           <div className="mt-9 flex flex-wrap justify-center gap-3">
@@ -903,9 +908,8 @@ export default function Home() {
           </div>
 
         </div>
-
       </motion.section>
 
-    </div>
+    </main>
   );
 }
