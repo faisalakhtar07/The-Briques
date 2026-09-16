@@ -190,13 +190,8 @@ export default function Home() {
     </div>
   </div>
 </section>
-<>
 
-
-
-      
-
-      <HeroSlider />
+ <HeroSlider />
 
       <section className="py-16 bg-paper">
         <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
