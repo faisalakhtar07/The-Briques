@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+import Hero from "../components/Hero.jsx";
 import Stats from "../components/Stats.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 import RoleCard from "../components/RoleCard.jsx";
@@ -41,7 +42,6 @@ const roles = [
     ],
     to: "/signup?role=seller",
   },
-
   {
     icon: Handshake,
     title: "For Owners",
@@ -55,7 +55,6 @@ const roles = [
     ],
     to: "/owner-login",
   },
-
   {
     icon: Users,
     title: "For Buyers",
@@ -82,37 +81,34 @@ const HOW_IT_WORKS = [
     desc:
       "Sellers list their property with photos, price and pincode — reviewed before going live.",
     image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
   },
-
   {
     title: "Owner & Admin Review",
     desc:
       "The pincode's assigned Owner and our Admin team verify every listing for accuracy.",
     image:
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
   },
-
   {
     title: "Buyer Explores",
     desc:
-      "Buyers browse verified listings, filter by price, area and rooms, and connect through the platform.",
+      "Buyers browse verified listings, filter by price/area/rooms, and connect through the platform.",
     image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85",
   },
-
   {
     title: "Secure Transaction",
     desc:
       "Payments and commissions are handled transparently, with a full record for everyone involved.",
     image:
-      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85",
   },
 ];
 
 
 /* =========================================================
-   WHY CHOOSE THE BRIQUES
+   WHY CHOOSE
 ========================================================= */
 
 const whyChoose = [
@@ -122,35 +118,30 @@ const whyChoose = [
     description:
       "We focus exclusively on builder floors, not apartments or villas.",
   },
-
   {
     icon: Sparkles,
     title: "Admin-Reviewed Listings",
     description:
       "Every listing is verified by our Admin team before going live.",
   },
-
   {
     icon: ShieldCheck,
     title: "Seller Privacy Protected",
     description:
       "Seller phone numbers are never shown to buyers — ever.",
   },
-
   {
     icon: Users,
     title: "Transparent Pricing",
     description:
       "See exactly what you pay, with full price history on record.",
   },
-
   {
     icon: Handshake,
     title: "Fair, Configurable Commission",
     description:
       "Commission is set transparently and can never surprise you.",
   },
-
   {
     icon: MapPinned,
     title: "Local-First",
@@ -161,40 +152,7 @@ const whyChoose = [
 
 
 /* =========================================================
-   IMAGE REVEAL COMPONENT
-========================================================= */
-
-function RevealImage({ src, alt }) {
-  return (
-    <motion.div
-      initial={{
-        clipPath: "inset(100% 0% 0% 0%)",
-      }}
-      whileInView={{
-        clipPath: "inset(0% 0% 0% 0%)",
-      }}
-      viewport={{
-        once: true,
-        amount: 0.25,
-      }}
-      transition={{
-        duration: 1,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="absolute inset-0"
-    >
-      <img
-        src={src}
-        alt={alt}
-        className="h-full w-full object-cover"
-      />
-    </motion.div>
-  );
-}
-
-
-/* =========================================================
-   HOME PAGE
+   HOME
 ========================================================= */
 
 export default function Home() {
@@ -203,25 +161,28 @@ export default function Home() {
 
   useEffect(() => {
     getPublicProperties({ limit: 3 })
-      .then(({ data }) => {
-        setProperties(data.properties || []);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then(({ data }) => setProperties(data.properties))
+      .finally(() => setLoading(false));
   }, []);
-
 
   return (
     <>
       {/* =====================================================
-          DISCOVER REAL BUILDER FLOORS
-          FIRST MAIN SECTION AFTER HEADER
+          HERO
       ===================================================== */}
 
-      <section className="bg-paper py-16 md:py-24">
-        <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4">
+      <Hero />
 
+      <Stats />
+
+
+      {/* =====================================================
+          DISCOVER REAL BUILDER FLOORS
+          FIRST SECTION AFTER HEADER / STATS
+      ===================================================== */}
+
+      <section className="py-16 bg-paper">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
           <SectionHeading
             eyebrow="Live Inventory"
             title="Discover Real Builder Floors"
@@ -241,24 +202,16 @@ export default function Home() {
               View All Properties
             </Button>
           </div>
-
         </div>
       </section>
 
 
       {/* =====================================================
-          STATS
+          WHAT IS THE BRIQUES?
       ===================================================== */}
 
-      <Stats />
-
-
-      {/* =====================================================
-          WHAT IS THE BRIQUES
-      ===================================================== */}
-
-      <section className="bg-paper py-20 md:py-28">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-14 px-4">
+      <section className="py-16 bg-paper">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col items-center gap-14">
 
           <SectionHeading
             eyebrow="Who We Serve"
@@ -267,15 +220,13 @@ export default function Home() {
           />
 
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
-
-            {roles.map((role, index) => (
+            {roles.map((r, i) => (
               <RoleCard
-                key={role.title}
-                {...role}
-                delay={index * 0.1}
+                key={r.title}
+                {...r}
+                delay={i * 0.1}
               />
             ))}
-
           </div>
 
         </div>
@@ -283,98 +234,25 @@ export default function Home() {
 
 
       {/* =====================================================
-          IMAGE STORY / PREMIUM VISUAL SECTION
+          WHY CHOOSE THE BRIQUES?
       ===================================================== */}
 
-      <section className="overflow-hidden bg-white py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-4">
-
-          <div className="grid items-center gap-12 md:grid-cols-2 md:gap-20">
-
-            {/* Image */}
-            <div className="relative h-[420px] overflow-hidden rounded-[32px] md:h-[600px]">
-
-              <RevealImage
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90"
-                alt="Premium builder floor"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-
-            </div>
-
-
-            {/* Content */}
-            <motion.div
-              initial={{
-                opacity: 0,
-                x: 40,
-              }}
-              whileInView={{
-                opacity: 1,
-                x: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.25,
-              }}
-              transition={{
-                duration: 0.7,
-              }}
-            >
-
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
-                Built Around Trust
-              </p>
-
-              <h2 className="font-display text-3xl font-bold leading-tight text-ink-900 md:text-5xl">
-                A better way to discover builder floors.
-              </h2>
-
-              <p className="mt-6 max-w-xl text-sm leading-relaxed text-ink-500 md:text-base">
-                The Briques brings Sellers, local Owners and Buyers together
-                through a transparent property discovery experience designed
-                specifically for builder floors.
-              </p>
-
-              <div className="mt-8">
-                <Button
-                  to="/properties"
-                  variant="primary"
-                >
-                  Explore Properties
-                </Button>
-              </div>
-
-            </motion.div>
-
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* =====================================================
-          WHY CHOOSE THE BRIQUES
-          NO IMAGES
-      ===================================================== */}
-
-      <section className="bg-paper px-4 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl">
+      <section className="mt-24 md:mt-32 px-4">
+        <div className="max-w-7xl mx-auto">
 
           {/* Heading */}
 
-          <div className="mb-12 text-center md:mb-16">
+          <div className="text-center mb-12 md:mb-16">
 
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+            <p className="text-xs font-semibold tracking-[0.2em] text-brand-600 uppercase mb-3">
               Our Edge
             </p>
 
-            <h2 className="font-display text-3xl font-bold text-ink-900 md:text-5xl">
+            <h2 className="font-display font-bold text-3xl md:text-5xl text-ink-900">
               Why Choose The Briques?
             </h2>
 
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink-500 md:text-base">
+            <p className="text-ink-500 max-w-2xl mx-auto mt-4 text-sm md:text-base leading-relaxed">
               We understand the builder floor market inside out.
             </p>
 
@@ -383,65 +261,44 @@ export default function Home() {
 
           {/* Cards */}
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-            {whyChoose.map((item, index) => {
+            {whyChoose.map((item, i) => {
               const Icon = item.icon;
 
               return (
-                <motion.div
+                <div
                   key={item.title}
-                  initial={{
-                    opacity: 0,
-                    y: 25,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    amount: 0.15,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.06,
-                  }}
                   className="
                     group
                     relative
-                    min-h-[230px]
-                    overflow-hidden
                     rounded-[26px]
-                    border
-                    border-cloud-200
+                    border border-cloud-200
                     bg-white
-                    p-7
+                    p-7 md:p-8
+                    min-h-[230px]
                     shadow-[0_15px_45px_rgba(0,0,0,0.07)]
-                    transition-all
-                    duration-300
+                    transition-all duration-300
                     hover:-translate-y-1
                     hover:shadow-[0_20px_55px_rgba(0,0,0,0.11)]
-                    md:p-8
                   "
                 >
 
-                  {/* Background Number */}
+                  {/* Number */}
 
                   <div
                     className="
-                      pointer-events-none
                       absolute
-                      right-6
                       top-5
-                      select-none
-                      font-display
+                      right-6
                       text-5xl
+                      font-display
                       font-bold
                       text-ink-900/[0.04]
+                      select-none
                     "
                   >
-                    {String(index + 1).padStart(2, "0")}
+                    {String(i + 1).padStart(2, "0")}
                   </div>
 
 
@@ -449,15 +306,15 @@ export default function Home() {
 
                   <div
                     className="
-                      mb-6
-                      flex
                       h-12
                       w-12
-                      items-center
-                      justify-center
                       rounded-2xl
                       bg-brand-500/10
                       text-brand-600
+                      flex
+                      items-center
+                      justify-center
+                      mb-6
                       transition-transform
                       duration-300
                       group-hover:scale-105
@@ -470,54 +327,51 @@ export default function Home() {
                   </div>
 
 
-                  {/* Title */}
+                  {/* Content */}
 
                   <h3
                     className="
                       font-display
-                      text-xl
                       font-bold
+                      text-xl
                       text-ink-900
                     "
                   >
                     {item.title}
                   </h3>
 
-
-                  {/* Description */}
-
                   <p
                     className="
                       mt-3
-                      max-w-sm
                       text-sm
                       leading-relaxed
                       text-ink-500
+                      max-w-sm
                     "
                   >
                     {item.description}
                   </p>
 
 
-                  {/* Hover Line */}
+                  {/* Bottom Line */}
 
                   <div
                     className="
                       absolute
-                      bottom-0
                       left-7
                       right-7
+                      bottom-0
                       h-[2px]
-                      origin-left
-                      scale-x-0
                       bg-brand-500
+                      scale-x-0
+                      origin-left
                       transition-transform
                       duration-300
                       group-hover:scale-x-100
                     "
                   />
 
-                </motion.div>
+                </div>
               );
             })}
 
@@ -529,7 +383,7 @@ export default function Home() {
 
       {/* =====================================================
           HOW IT WORKS
-          IMAGE BACKGROUND + STICKY STACKING
+          STICKY / STACKED CARDS
       ===================================================== */}
 
       <section
@@ -537,15 +391,14 @@ export default function Home() {
         className="relative bg-white py-20 md:py-28"
       >
 
-        <div className="mx-auto max-w-7xl px-5 md:px-6">
+        <div className="max-w-7xl mx-auto px-5 md:px-6">
 
           {/* Heading */}
 
-          <div className="mb-14 text-center md:mb-20">
+          <div className="text-center mb-16 md:mb-20">
 
             <p
               className="
-                mb-5
                 inline-flex
                 items-center
                 rounded-full
@@ -554,19 +407,38 @@ export default function Home() {
                 py-2
                 text-xs
                 font-semibold
-                uppercase
                 tracking-[0.16em]
                 text-[#8f7015]
+                uppercase
+                mb-5
               "
             >
               Process
             </p>
 
-            <h2 className="font-display text-3xl font-bold text-ink-900 md:text-5xl">
+            <h2
+              className="
+                font-display
+                font-bold
+                text-3xl
+                md:text-5xl
+                text-ink-900
+              "
+            >
               How It Works
             </h2>
 
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink-500 md:text-base">
+            <p
+              className="
+                text-ink-500
+                max-w-2xl
+                mx-auto
+                mt-4
+                text-sm
+                md:text-base
+                leading-relaxed
+              "
+            >
               A simple, transparent process that benefits everyone in the ecosystem.
             </p>
 
@@ -575,268 +447,184 @@ export default function Home() {
 
           {/* Sticky Cards */}
 
-          <div className="mx-auto max-w-5xl">
+          <div className="max-w-5xl mx-auto">
 
-            {HOW_IT_WORKS.map((step, index) => (
+            {HOW_IT_WORKS.map((step, i) => (
+
               <div
                 key={step.title}
-                className="relative mb-8 min-h-[620px] md:mb-10 md:min-h-[760px]"
+                className="sticky mb-8 md:mb-10"
+                style={{
+                  top: `${90 + i * 18}px`,
+                  zIndex: i + 1,
+                }}
               >
 
                 <div
-                  className="sticky"
-                  style={{
-                    top: `${90 + index * 18}px`,
-                    zIndex: index + 1,
-                  }}
+                  className="
+                    relative
+                    overflow-hidden
+                    min-h-[420px]
+                    md:min-h-[500px]
+                    rounded-[30px]
+                    md:rounded-[38px]
+                    bg-ink-900
+                    shadow-[0_25px_70px_rgba(0,0,0,0.18)]
+                    border border-black/10
+                  "
                 >
 
-                  {/* Main Card */}
+                  {/* Background Image */}
 
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: 60,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{
-                      once: true,
-                      amount: 0.15,
-                    }}
-                    transition={{
-                      duration: 0.7,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="
+                      absolute
+                      inset-0
+                      h-full
+                      w-full
+                      object-cover
+                    "
+                  />
+
+
+                  {/* Dark Overlay */}
+
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      bg-black/45
+                    "
+                  />
+
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      bg-gradient-to-t
+                      from-black/85
+                      via-black/35
+                      to-black/10
+                    "
+                  />
+
+
+                  {/* Card Content */}
+
+                  <div
                     className="
                       relative
-                      h-[520px]
-                      overflow-hidden
-                      rounded-[30px]
-                      border
-                      border-black/10
-                      bg-ink-900
-                      shadow-[0_25px_70px_rgba(0,0,0,0.18)]
-                      md:h-[650px]
-                      md:rounded-[38px]
+                      z-10
+                      flex
+                      min-h-[420px]
+                      md:min-h-[500px]
+                      flex-col
+                      justify-between
+                      p-7
+                      md:p-12
                     "
                   >
 
-                    {/* Image Reveal */}
+                    {/* Top */}
 
-                    <RevealImage
-                      src={step.image}
-                      alt={step.title}
-                    />
+                    <div className="flex items-start justify-between">
 
-
-                    {/* Dark Overlay */}
-
-                    <div className="absolute inset-0 bg-black/45" />
-
-
-                    {/* Gradient */}
-
-                    <div
-                      className="
-                        absolute
-                        inset-0
-                        bg-gradient-to-t
-                        from-black/90
-                        via-black/35
-                        to-transparent
-                      "
-                    />
-
-
-                    {/* Large Background Number */}
-
-                    <div
-                      className="
-                        pointer-events-none
-                        absolute
-                        right-5
-                        top-3
-                        select-none
-                        font-display
-                        text-[120px]
-                        font-bold
-                        leading-none
-                        text-white/10
-                        md:right-10
-                        md:text-[190px]
-                      "
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </div>
-
-
-                    {/* Card Content */}
-
-                    <div
-                      className="
-                        relative
-                        z-10
-                        flex
-                        h-full
-                        flex-col
-                        justify-between
-                        p-7
-                        md:p-12
-                      "
-                    >
-
-                      {/* Top */}
-
-                      <div className="flex items-start justify-between">
-
-                        {/* Number */}
-
-                        <div
-                          className="
-                            flex
-                            h-14
-                            w-14
-                            items-center
-                            justify-center
-                            rounded-2xl
-                            border
-                            border-white/20
-                            bg-white/15
-                            font-display
-                            text-lg
-                            font-bold
-                            text-white
-                            backdrop-blur-md
-                            md:h-16
-                            md:w-16
-                            md:text-xl
-                          "
-                        >
-                          {String(index + 1).padStart(2, "0")}
-                        </div>
-
-
-                        {/* Step */}
-
-                        <div
-                          className="
-                            rounded-full
-                            border
-                            border-white/20
-                            bg-white/10
-                            px-4
-                            py-2
-                            text-xs
-                            font-semibold
-                            uppercase
-                            tracking-[0.15em]
-                            text-white/80
-                            backdrop-blur-md
-                          "
-                        >
-                          Step {index + 1} / {HOW_IT_WORKS.length}
-                        </div>
-
+                      <div
+                        className="
+                          flex
+                          h-14
+                          w-14
+                          md:h-16
+                          md:w-16
+                          items-center
+                          justify-center
+                          rounded-2xl
+                          bg-white/15
+                          backdrop-blur-md
+                          border
+                          border-white/20
+                          text-white
+                          font-display
+                          font-bold
+                          text-lg
+                          md:text-xl
+                        "
+                      >
+                        {String(i + 1).padStart(2, "0")}
                       </div>
 
-
-                      {/* Bottom Content */}
-
-                      <div className="max-w-2xl">
-
-                        {/* Small Line */}
-
-                        <div
-                          className="
-                            mb-4
-                            h-1
-                            w-14
-                            rounded-full
-                            bg-white
-                          "
-                        />
-
-
-                        {/* Title */}
-
-                        <h3
-                          className="
-                            font-display
-                            text-3xl
-                            font-bold
-                            leading-tight
-                            text-white
-                            md:text-5xl
-                          "
-                        >
-                          {step.title}
-                        </h3>
-
-
-                        {/* Description */}
-
-                        <p
-                          className="
-                            mt-4
-                            max-w-xl
-                            text-sm
-                            leading-relaxed
-                            text-white/80
-                            md:text-base
-                          "
-                        >
-                          {step.desc}
-                        </p>
-
-
-                        {/* Progress */}
-
-                        <div className="mt-7 flex items-center gap-3">
-
-                          <div
-                            className="
-                              h-1.5
-                              w-32
-                              overflow-hidden
-                              rounded-full
-                              bg-white/25
-                              md:w-48
-                            "
-                          >
-                            <div
-                              className="
-                                h-full
-                                rounded-full
-                                bg-brand-500
-                              "
-                              style={{
-                                width: `${
-                                  ((index + 1) /
-                                    HOW_IT_WORKS.length) *
-                                  100
-                                }%`,
-                              }}
-                            />
-                          </div>
-
-                          <span className="text-xs text-white/70">
-                            {index + 1} / {HOW_IT_WORKS.length}
-                          </span>
-
-                        </div>
-
+                      <div
+                        className="
+                          rounded-full
+                          border
+                          border-white/20
+                          bg-white/10
+                          px-4
+                          py-2
+                          text-xs
+                          font-semibold
+                          tracking-[0.15em]
+                          text-white/90
+                          uppercase
+                          backdrop-blur-md
+                        "
+                      >
+                        Step {i + 1} / {HOW_IT_WORKS.length}
                       </div>
 
                     </div>
 
-                  </motion.div>
+
+                    {/* Bottom Content */}
+
+                    <div className="max-w-2xl">
+
+                      <div
+                        className="
+                          mb-4
+                          h-1
+                          w-14
+                          rounded-full
+                          bg-white
+                        "
+                      />
+
+                      <h3
+                        className="
+                          font-display
+                          font-bold
+                          text-3xl
+                          md:text-5xl
+                          leading-tight
+                          text-white
+                        "
+                      >
+                        {step.title}
+                      </h3>
+
+                      <p
+                        className="
+                          mt-4
+                          max-w-xl
+                          text-sm
+                          md:text-base
+                          leading-relaxed
+                          text-white/80
+                        "
+                      >
+                        {step.desc}
+                      </p>
+
+                    </div>
+
+                  </div>
 
                 </div>
 
               </div>
+
             ))}
 
           </div>
@@ -848,41 +636,9 @@ export default function Home() {
 
       {/* =====================================================
           HERO SLIDER
-          COMPLETELY SEPARATE
       ===================================================== */}
 
       <HeroSlider />
-
-
-      {/* =====================================================
-          MORE LIVE INVENTORY
-      ===================================================== */}
-
-      <section className="bg-paper py-16 md:py-20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-14 px-4">
-
-          <SectionHeading
-            eyebrow="Live Inventory"
-            title="More Properties"
-            align="left"
-          />
-
-          <PropertyGrid
-            properties={properties}
-            loading={loading}
-          />
-
-          <div className="flex justify-center">
-            <Button
-              to="/properties"
-              variant="primary"
-            >
-              View All Properties
-            </Button>
-          </div>
-
-        </div>
-      </section>
 
 
       {/* =====================================================
@@ -896,8 +652,8 @@ export default function Home() {
           TESTIMONIALS
       ===================================================== */}
 
-      <section className="bg-paper py-16 md:py-24">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-14 px-4">
+      <section className="py-16 bg-paper">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col items-center gap-14">
 
           <SectionHeading
             eyebrow="Community"
@@ -907,11 +663,11 @@ export default function Home() {
 
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
 
-            {testimonials.map((testimonial, index) => (
+            {testimonials.map((t, i) => (
               <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-                delay={index * 0.08}
+                key={t.id}
+                testimonial={t}
+                delay={i * 0.08}
               />
             ))}
 
@@ -926,32 +682,22 @@ export default function Home() {
       ===================================================== */}
 
       <motion.section
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 0.5,
-        }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
         className="border-y border-black/8 bg-white"
       >
 
         <div
           className="
             mx-auto
-            flex
             max-w-7xl
+            px-4
+            flex
             flex-col
             items-center
             gap-5
-            px-4
             py-16
             text-center
           "
@@ -960,8 +706,8 @@ export default function Home() {
           <h2
             className="
               max-w-xl
-              font-display
               text-2xl
+              font-display
               font-bold
               text-ink
               sm:text-3xl
@@ -969,7 +715,6 @@ export default function Home() {
           >
             Ready to find or list a builder floor with confidence?
           </h2>
-
 
           <div className="flex flex-wrap justify-center gap-3">
 
