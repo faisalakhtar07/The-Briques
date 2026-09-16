@@ -14,17 +14,15 @@ import Hero from "../components/Hero.jsx";
 import Stats from "../components/Stats.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 import RoleCard from "../components/RoleCard.jsx";
-import FeatureCard from "../components/FeatureCard.jsx";
-import LocationCard from "../components/LocationCard.jsx";
 import HeroSlider from "../components/HeroSlider.jsx";
 import PropertyGrid from "../components/PropertyGrid.jsx";
 import TestimonialCard from "../components/TestimonialCard.jsx";
 import AppPromotion from "../components/AppPromotion.jsx";
 import Button from "../components/Button.jsx";
 
-import { locations } from "../data/locations.js";
 import { testimonials } from "../data/testimonials.js";
 import { getPublicProperties } from "../api/properties.js";
+
 
 /* =========================================================
    ROLES
@@ -72,6 +70,7 @@ const roles = [
   },
 ];
 
+
 /* =========================================================
    HOW IT WORKS
 ========================================================= */
@@ -79,32 +78,37 @@ const roles = [
 const HOW_IT_WORKS = [
   {
     title: "Seller Posts Property",
-    desc: "Sellers list their property with photos, price and pincode — reviewed before going live.",
+    desc:
+      "Sellers list their property with photos, price and pincode — reviewed before going live.",
     image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
   },
   {
     title: "Owner & Admin Review",
-    desc: "The pincode's assigned Owner and our Admin team verify every listing for accuracy.",
+    desc:
+      "The pincode's assigned Owner and our Admin team verify every listing for accuracy.",
     image:
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
   },
   {
     title: "Buyer Explores",
-    desc: "Buyers browse verified listings, filter by price/area/rooms, and connect through the platform.",
+    desc:
+      "Buyers browse verified listings, filter by price/area/rooms, and connect through the platform.",
     image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85",
   },
   {
     title: "Secure Transaction",
-    desc: "Payments and commissions are handled transparently, with a full record for everyone involved.",
+    desc:
+      "Payments and commissions are handled transparently, with a full record for everyone involved.",
     image:
-      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85",
   },
 ];
 
+
 /* =========================================================
-   WHY CHOOSE THE BRIQUES
+   WHY CHOOSE
 ========================================================= */
 
 const whyChoose = [
@@ -146,8 +150,9 @@ const whyChoose = [
   },
 ];
 
+
 /* =========================================================
-   HOME PAGE
+   HOME
 ========================================================= */
 
 export default function Home() {
@@ -168,18 +173,46 @@ export default function Home() {
 
       <Hero />
 
-      {/* =====================================================
-          STATS
-      ===================================================== */}
-
       <Stats />
 
+
       {/* =====================================================
-          WHAT IS THE BRIQUES
+          DISCOVER REAL BUILDER FLOORS
+          FIRST SECTION AFTER HEADER / STATS
+      ===================================================== */}
+
+      <section className="py-16 bg-paper">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
+          <SectionHeading
+            eyebrow="Live Inventory"
+            title="Discover Real Builder Floors"
+            align="left"
+          />
+
+          <PropertyGrid
+            properties={properties}
+            loading={loading}
+          />
+
+          <div className="flex justify-center">
+            <Button
+              to="/properties"
+              variant="primary"
+            >
+              View All Properties
+            </Button>
+          </div>
+        </div>
+      </section>
+
+
+      {/* =====================================================
+          WHAT IS THE BRIQUES?
       ===================================================== */}
 
       <section className="py-16 bg-paper">
         <div className="mx-auto max-w-7xl px-4 flex flex-col items-center gap-14">
+
           <SectionHeading
             eyebrow="Who We Serve"
             title="What is The Briques?"
@@ -188,22 +221,29 @@ export default function Home() {
 
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
             {roles.map((r, i) => (
-              <RoleCard key={r.title} {...r} delay={i * 0.1} />
+              <RoleCard
+                key={r.title}
+                {...r}
+                delay={i * 0.1}
+              />
             ))}
           </div>
+
         </div>
       </section>
 
+
       {/* =====================================================
-          WHY CHOOSE THE BRIQUES
-          NO IMAGES
+          WHY CHOOSE THE BRIQUES?
       ===================================================== */}
 
-      <section className="py-20 md:py-28 bg-paper">
-        <div className="mx-auto max-w-7xl px-4">
+      <section className="mt-24 md:mt-32 px-4">
+        <div className="max-w-7xl mx-auto">
 
           {/* Heading */}
+
           <div className="text-center mb-12 md:mb-16">
+
             <p className="text-xs font-semibold tracking-[0.2em] text-brand-600 uppercase mb-3">
               Our Edge
             </p>
@@ -215,9 +255,12 @@ export default function Home() {
             <p className="text-ink-500 max-w-2xl mx-auto mt-4 text-sm md:text-base leading-relaxed">
               We understand the builder floor market inside out.
             </p>
+
           </div>
 
-          {/* Why Choose Cards */}
+
+          {/* Cards */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
             {whyChoose.map((item, i) => {
@@ -229,42 +272,40 @@ export default function Home() {
                   className="
                     group
                     relative
-                    overflow-hidden
                     rounded-[26px]
                     border border-cloud-200
                     bg-white
                     p-7 md:p-8
-                    min-h-[235px]
-                    shadow-[0_15px_45px_rgba(0,0,0,0.06)]
+                    min-h-[230px]
+                    shadow-[0_15px_45px_rgba(0,0,0,0.07)]
                     transition-all duration-300
                     hover:-translate-y-1
-                    hover:shadow-[0_20px_55px_rgba(0,0,0,0.10)]
+                    hover:shadow-[0_20px_55px_rgba(0,0,0,0.11)]
                   "
                 >
 
-                  {/* Background Number */}
+                  {/* Number */}
+
                   <div
                     className="
                       absolute
-                      top-2
-                      right-5
-                      text-[80px]
-                      leading-none
+                      top-5
+                      right-6
+                      text-5xl
                       font-display
                       font-bold
-                      text-ink-900/[0.035]
+                      text-ink-900/[0.04]
                       select-none
-                      pointer-events-none
                     "
                   >
                     {String(i + 1).padStart(2, "0")}
                   </div>
 
+
                   {/* Icon */}
+
                   <div
                     className="
-                      relative
-                      z-10
                       h-12
                       w-12
                       rounded-2xl
@@ -279,14 +320,17 @@ export default function Home() {
                       group-hover:scale-105
                     "
                   >
-                    <Icon size={22} strokeWidth={1.8} />
+                    <Icon
+                      size={22}
+                      strokeWidth={1.8}
+                    />
                   </div>
 
-                  {/* Title */}
+
+                  {/* Content */}
+
                   <h3
                     className="
-                      relative
-                      z-10
                       font-display
                       font-bold
                       text-xl
@@ -296,11 +340,8 @@ export default function Home() {
                     {item.title}
                   </h3>
 
-                  {/* Description */}
                   <p
                     className="
-                      relative
-                      z-10
                       mt-3
                       text-sm
                       leading-relaxed
@@ -311,7 +352,9 @@ export default function Home() {
                     {item.description}
                   </p>
 
-                  {/* Bottom Hover Line */}
+
+                  {/* Bottom Line */}
+
                   <div
                     className="
                       absolute
@@ -327,27 +370,33 @@ export default function Home() {
                       group-hover:scale-x-100
                     "
                   />
+
                 </div>
               );
             })}
 
           </div>
+
         </div>
       </section>
 
+
       {/* =====================================================
           HOW IT WORKS
-          IMAGE BACKGROUND + STICKY STACKING
+          STICKY / STACKED CARDS
       ===================================================== */}
 
       <section
         id="how-it-works"
-        className="py-20 md:py-28 bg-white scroll-mt-20"
+        className="relative bg-white py-20 md:py-28"
       >
-        <div className="max-w-7xl mx-auto px-4">
+
+        <div className="max-w-7xl mx-auto px-5 md:px-6">
 
           {/* Heading */}
-          <div className="text-center mb-14 md:mb-20">
+
+          <div className="text-center mb-16 md:mb-20">
+
             <p
               className="
                 inline-flex
@@ -367,181 +416,181 @@ export default function Home() {
               Process
             </p>
 
-            <h2 className="font-display font-bold text-3xl md:text-5xl text-ink-900">
+            <h2
+              className="
+                font-display
+                font-bold
+                text-3xl
+                md:text-5xl
+                text-ink-900
+              "
+            >
               How It Works
             </h2>
 
-            <p className="text-ink-500 max-w-2xl mx-auto mt-4 text-sm md:text-base leading-relaxed">
-              A simple, transparent process that benefits everyone in the
-              ecosystem.
+            <p
+              className="
+                text-ink-500
+                max-w-2xl
+                mx-auto
+                mt-4
+                text-sm
+                md:text-base
+                leading-relaxed
+              "
+            >
+              A simple, transparent process that benefits everyone in the ecosystem.
             </p>
+
           </div>
 
-          {/* Sticky Stacked Cards */}
-          <div className="relative max-w-6xl mx-auto pb-24">
+
+          {/* Sticky Cards */}
+
+          <div className="max-w-5xl mx-auto">
 
             {HOW_IT_WORKS.map((step, i) => (
+
               <div
                 key={step.title}
-                className="sticky"
+                className="sticky mb-8 md:mb-10"
                 style={{
-                  top: `${75 + i * 24}px`,
+                  top: `${90 + i * 18}px`,
                   zIndex: i + 1,
                 }}
               >
 
-                {/* Main Card */}
                 <div
                   className="
                     relative
-                    mb-8
-                    min-h-[440px]
-                    md:min-h-[540px]
-                    rounded-[28px]
-                    md:rounded-[36px]
                     overflow-hidden
-                    bg-white
-                    border border-cloud-200
-                    shadow-[0_25px_70px_rgba(0,0,0,0.13)]
+                    min-h-[420px]
+                    md:min-h-[500px]
+                    rounded-[30px]
+                    md:rounded-[38px]
+                    bg-ink-900
+                    shadow-[0_25px_70px_rgba(0,0,0,0.18)]
+                    border border-black/10
                   "
                 >
 
-                  {/* =================================================
-                      BACKGROUND IMAGE
-                  ================================================= */}
+                  {/* Background Image */}
 
-                  <div className="absolute inset-0">
-                    <img
-                      src={step.image}
-                      alt={step.title}
-                      className="
-                        w-full
-                        h-full
-                        object-cover
-                      "
-                    />
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="
+                      absolute
+                      inset-0
+                      h-full
+                      w-full
+                      object-cover
+                    "
+                  />
 
-                    {/* Dark Gradient Left */}
-                    <div
-                      className="
-                        absolute
-                        inset-0
-                        bg-gradient-to-r
-                        from-black/75
-                        via-black/40
-                        to-black/10
-                      "
-                    />
 
-                    {/* Bottom Gradient */}
-                    <div
-                      className="
-                        absolute
-                        inset-0
-                        bg-gradient-to-t
-                        from-black/65
-                        via-transparent
-                        to-transparent
-                      "
-                    />
-                  </div>
-
-                  {/* =================================================
-                      STEP NUMBER CIRCLE
-                  ================================================= */}
+                  {/* Dark Overlay */}
 
                   <div
                     className="
                       absolute
-                      top-6
-                      left-6
-                      md:top-8
-                      md:left-8
-                      z-20
+                      inset-0
+                      bg-black/45
                     "
-                  >
-                    <div
-                      className="
-                        h-12
-                        w-12
-                        md:h-14
-                        md:w-14
-                        rounded-full
-                        bg-brand-500
-                        text-white
-                        flex
-                        items-center
-                        justify-center
-                        font-display
-                        font-bold
-                        text-lg
-                        md:text-xl
-                        shadow-[0_8px_25px_rgba(0,0,0,0.25)]
-                      "
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                  </div>
-
-                  {/* =================================================
-                      LARGE BACKGROUND NUMBER
-                  ================================================= */}
+                  />
 
                   <div
                     className="
                       absolute
-                      right-5
-                      top-3
-                      md:right-10
-                      md:top-0
-                      text-[120px]
-                      md:text-[190px]
-                      font-display
-                      font-bold
-                      text-white/10
-                      leading-none
-                      select-none
-                      pointer-events-none
-                      z-10
+                      inset-0
+                      bg-gradient-to-t
+                      from-black/85
+                      via-black/35
+                      to-black/10
                     "
-                  >
-                    {i + 1}
-                  </div>
+                  />
 
-                  {/* =================================================
-                      CONTENT
-                  ================================================= */}
+
+                  {/* Card Content */}
 
                   <div
                     className="
                       relative
-                      z-20
+                      z-10
                       flex
-                      items-end
-                      min-h-[440px]
-                      md:min-h-[540px]
+                      min-h-[420px]
+                      md:min-h-[500px]
+                      flex-col
+                      justify-between
                       p-7
                       md:p-12
                     "
                   >
-                    <div className="max-w-2xl text-white">
 
-                      {/* Step Label */}
-                      <p
+                    {/* Top */}
+
+                    <div className="flex items-start justify-between">
+
+                      <div
                         className="
-                          text-xs
-                          md:text-sm
-                          font-semibold
-                          tracking-[0.18em]
-                          uppercase
-                          text-white/75
-                          mb-3
+                          flex
+                          h-14
+                          w-14
+                          md:h-16
+                          md:w-16
+                          items-center
+                          justify-center
+                          rounded-2xl
+                          bg-white/15
+                          backdrop-blur-md
+                          border
+                          border-white/20
+                          text-white
+                          font-display
+                          font-bold
+                          text-lg
+                          md:text-xl
                         "
                       >
-                        Step {i + 1}
-                      </p>
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
 
-                      {/* Title */}
+                      <div
+                        className="
+                          rounded-full
+                          border
+                          border-white/20
+                          bg-white/10
+                          px-4
+                          py-2
+                          text-xs
+                          font-semibold
+                          tracking-[0.15em]
+                          text-white/90
+                          uppercase
+                          backdrop-blur-md
+                        "
+                      >
+                        Step {i + 1} / {HOW_IT_WORKS.length}
+                      </div>
+
+                    </div>
+
+
+                    {/* Bottom Content */}
+
+                    <div className="max-w-2xl">
+
+                      <div
+                        className="
+                          mb-4
+                          h-1
+                          w-14
+                          rounded-full
+                          bg-white
+                        "
+                      />
+
                       <h3
                         className="
                           font-display
@@ -549,107 +598,55 @@ export default function Home() {
                           text-3xl
                           md:text-5xl
                           leading-tight
+                          text-white
                         "
                       >
                         {step.title}
                       </h3>
 
-                      {/* Description */}
                       <p
                         className="
                           mt-4
-                          text-sm
-                          md:text-lg
-                          text-white/85
-                          leading-relaxed
                           max-w-xl
+                          text-sm
+                          md:text-base
+                          leading-relaxed
+                          text-white/80
                         "
                       >
                         {step.desc}
                       </p>
 
-                      {/* Progress */}
-                      <div className="mt-7 flex items-center gap-3">
-
-                        <div
-                          className="
-                            h-1.5
-                            w-32
-                            md:w-48
-                            bg-white/25
-                            rounded-full
-                            overflow-hidden
-                          "
-                        >
-                          <div
-                            className="
-                              h-full
-                              bg-brand-500
-                              rounded-full
-                            "
-                            style={{
-                              width: `${
-                                ((i + 1) / HOW_IT_WORKS.length) * 100
-                              }%`,
-                            }}
-                          />
-                        </div>
-
-                        <span className="text-xs text-white/70">
-                          {i + 1} / {HOW_IT_WORKS.length}
-                        </span>
-                      </div>
-
                     </div>
+
                   </div>
 
                 </div>
+
               </div>
+
             ))}
 
           </div>
+
         </div>
+
       </section>
+
 
       {/* =====================================================
           HERO SLIDER
-          COMPLETELY SEPARATE FROM HOW IT WORKS
       ===================================================== */}
 
       <HeroSlider />
 
-      {/* =====================================================
-          LIVE INVENTORY
-      ===================================================== */}
-
-      <section className="py-16 bg-paper">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
-
-          <SectionHeading
-            eyebrow="Live Inventory"
-            title="Discover Real Builder Floors"
-            align="left"
-          />
-
-          <PropertyGrid
-            properties={properties}
-            loading={loading}
-          />
-
-          <div className="flex justify-center">
-            <Button to="/properties" variant="primary">
-              View All Properties
-            </Button>
-          </div>
-
-        </div>
-      </section>
 
       {/* =====================================================
           APP PROMOTION
       ===================================================== */}
 
       <AppPromotion />
+
 
       {/* =====================================================
           TESTIMONIALS
@@ -675,8 +672,10 @@ export default function Home() {
             ))}
 
           </div>
+
         </div>
       </section>
+
 
       {/* =====================================================
           FINAL CTA
@@ -689,6 +688,7 @@ export default function Home() {
         transition={{ duration: 0.5 }}
         className="border-y border-black/8 bg-white"
       >
+
         <div
           className="
             mx-auto
@@ -718,16 +718,24 @@ export default function Home() {
 
           <div className="flex flex-wrap justify-center gap-3">
 
-            <Button to="/properties" variant="primary">
+            <Button
+              to="/properties"
+              variant="primary"
+            >
               Browse Properties
             </Button>
 
-            <Button to="/choose-role" variant="secondary">
+            <Button
+              to="/choose-role"
+              variant="secondary"
+            >
               List Your Property
             </Button>
 
           </div>
+
         </div>
+
       </motion.section>
 
     </>
