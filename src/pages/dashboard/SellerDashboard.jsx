@@ -3,6 +3,9 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyProperties, createProperty } from "../../api/properties.js";
 import { getPublicSettings } from "../../api/settings.js";
 import { Upload, X, PlusCircle, IndianRupee, AlertTriangle } from "lucide-react";
+import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx"; 
+
+<EnableNotificationsButton />
 
 const MAX_PHOTOS = 5;
 

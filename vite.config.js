@@ -6,6 +6,15 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // injectManifest (instead of generateSW) lets us ship a custom
+      // service worker (src/sw.js) that handles real push notifications —
+      // generateSW only supports offline caching, not push events.
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.js",
+      injectManifest: {
+        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+      },
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "icons/icon-192.png", "icons/icon-512.png"],
       manifest: {
@@ -20,16 +29,6 @@ export default defineConfig({
           { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
           { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
-        ],
-      },
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.pathname.startsWith("/api/properties"),
-            handler: "NetworkFirst",
-            options: { cacheName: "properties-cache", expiration: { maxEntries: 50, maxAgeSeconds: 300 } },
-          },
         ],
       },
     }),

@@ -3,7 +3,9 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import api from "../../api/axios.js";
 import { getOwnerBookings, approveBooking, rejectBooking } from "../../api/bookings.js";
 import { Users, Building2, Wallet, ShoppingBag, Phone, Check, X } from "lucide-react";
+import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx"; 
 
+<EnableNotificationsButton />
 // Owner dashboard is strictly scoped server-side to req.user.pincode
 // (see /api/pincodes/owner/dashboard and /api/bookings/owner) — this page
 // just renders whatever the backend allows for this Owner, nothing more.

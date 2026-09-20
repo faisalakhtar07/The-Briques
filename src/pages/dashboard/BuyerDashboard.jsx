@@ -3,6 +3,9 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyBookings } from "../../api/bookings.js";
 import { getMyNotifications } from "../../api/notifications.js";
 import { Bell, ClipboardList } from "lucide-react";
+import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx"; 
+
+<EnableNotificationsButton />
 
 const STATUS_STYLES = {
   pending: "bg-gold-50 text-gold-600",
