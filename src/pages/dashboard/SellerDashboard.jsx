@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyProperties, createProperty } from "../../api/properties.js";
 import { getPublicSettings } from "../../api/settings.js";
-import { Upload, X, PlusCircle, IndianRupee, AlertTriangle } from "lucide-react";
-import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx"; 
-
-<EnableNotificationsButton />
+import { getMyNotifications } from "../../api/notifications.js";
+import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx";
+import { Upload, X, PlusCircle, IndianRupee, AlertTriangle, Bell } from "lucide-react";
 
 const MAX_PHOTOS = 5;
 
@@ -19,6 +18,7 @@ const STATUS_STYLES = {
 export default function SellerDashboard() {
   const { user } = useAuth();
   const [properties, setProperties] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -32,7 +32,15 @@ export default function SellerDashboard() {
       })
       .finally(() => setLoading(false));
   };
-  useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    load();
+    // This was the actual bug: the Seller dashboard never fetched or
+    // displayed notifications at all (Buyer's dashboard did) — so
+    // "your property has been booked" alerts were being created in the
+    // database correctly, but the Seller had nowhere in the UI to see them.
+    getMyNotifications().then(({ data }) => setNotifications(data.notifications)).catch(() => {});
+  }, []);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -48,6 +56,24 @@ export default function SellerDashboard() {
           <PlusCircle className="w-4 h-4" /> {showForm ? "Close form" : "Add Property"}
         </button>
       </div>
+
+      <EnableNotificationsButton />
+
+      {notifications.length > 0 && (
+        <div className="bg-white rounded-xl2 shadow-card p-5 mb-8">
+          <h2 className="font-display font-semibold flex items-center gap-2 mb-4">
+            <Bell className="w-5 h-5 text-emerald-600" /> Notifications
+          </h2>
+          <ul className="space-y-3">
+            {notifications.slice(0, 8).map((n) => (
+              <li key={n._id} className="text-sm border-b border-black/5 pb-2">
+                <p className="font-medium">{n.title}</p>
+                <p className="text-ink-soft">{n.message}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {showForm && (
         <PropertyForm
@@ -81,6 +107,11 @@ export default function SellerDashboard() {
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${STATUS_STYLES[p.status]}`}>
                     {p.status}
                   </span>
+                  {p.isBooked && (
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-600 text-white">
+                      Booked
+                    </span>
+                  )}
                 </div>
                 <p className="text-ink-soft text-sm">
                   {p.pincode} · {p.propertyType === "rent" ? "Rent" : p.propertyType === "event" ? "Event Space (per day)" : "Sale"}
@@ -149,8 +180,6 @@ function PropertyForm({ onCreated }) {
     try {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => {
-        // Event spaces don't have a meaningful room count — send 0 rather
-        // than whatever leftover value was in the form.
         if (k === "rooms" && isEvent) fd.append(k, 0);
         else fd.append(k, v);
       });
