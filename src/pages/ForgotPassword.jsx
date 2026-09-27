@@ -4,6 +4,7 @@ import { forgotPassword } from "../api/auth.js";
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [devResetUrl, setDevResetUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   const submit = async (e) => {
@@ -12,6 +13,7 @@ export default function ForgotPassword() {
     try {
       const { data } = await forgotPassword(email);
       setMessage(data.message);
+      setDevResetUrl(data.resetUrl || "");
     } catch {
       setMessage("Something went wrong. Please try again.");
     } finally {
@@ -26,6 +28,11 @@ export default function ForgotPassword() {
 
       <form onSubmit={submit} className="space-y-4 bg-white rounded-xl2 shadow-card p-6">
         {message && <p className="text-emerald-700 text-sm">{message}</p>}
+        {devResetUrl && (
+          <a href={devResetUrl} className="block text-xs text-emerald-700 underline break-all">
+            {devResetUrl}
+          </a>
+        )}
         <div>
           <label className="text-sm font-medium">Email</label>
           <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)}
