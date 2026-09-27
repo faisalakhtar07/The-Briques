@@ -75,18 +75,21 @@ export default function Hero() {
               Admin team, connected through local pincode Owners you can trust.
             </motion.p>
 
-          
-            {/* COMPACT SEARCH BAR */}
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.7, delay: 0.5 }}
-  className="mt-7 w-full max-w-2xl"
->
-  <div className="rounded-full bg-white/95 p-1.5 shadow-2xl backdrop-blur-md">
-    <HeroSearchBar />
-  </div>
-</motion.div>
+            {/* SEARCH BAR */}
+            <motion.div
+              initial={{ opacity: 0, y: 25, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="
+                mt-7
+                w-full
+                max-w-4xl
+                rounded-[22px]
+                md:mt-9
+              "
+            >
+              <HeroSearchBar />
+            </motion.div>
           </div>
 
           {/* BOTTOM CARDS */}
