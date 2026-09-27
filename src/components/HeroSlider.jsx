@@ -61,7 +61,22 @@ export default function HeroSlider() {
           transition={{ duration: 0.6 }}
           className="absolute inset-0"
         >
-          <img src={slides[index].image} alt={slides[index].title} className="w-full h-full object-cover" />
+          {/* Blurred, cropped copy fills the whole banner so there's no
+              empty/plain background strip... */}
+          <img
+            src={slides[index].image}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-50"
+          />
+          {/* ...while the real image is never cropped, whatever ratio Admin
+              uploaded it at (portrait, landscape, square) — it always shows
+              in full, centered, matching what Admin actually uploaded. */}
+          <img
+            src={slides[index].image}
+            alt={slides[index].title}
+            className="relative w-full h-full object-contain"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
           <div className="absolute bottom-10 left-6 md:left-16 text-white max-w-xl">
             <h2 className="text-2xl md:text-4xl font-display font-bold mb-3">{slides[index].title}</h2>
