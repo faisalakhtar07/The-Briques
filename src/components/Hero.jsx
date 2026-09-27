@@ -77,19 +77,13 @@ export default function Hero() {
 
             {/* SEARCH BAR */}
             <motion.div
-              initial={{ opacity: 0, y: 25, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="
-                mt-7
-                w-full
-                max-w-4xl
-                rounded-[22px]
-                md:mt-9
-              "
-            >
-              <HeroSearchBar />
-            </motion.div>
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7, delay: 0.5 }}
+  className="mt-7 w-full max-w-4xl"
+>
+  <HeroSearchBar />
+</motion.div>
           </div>
 
           {/* BOTTOM CARDS */}

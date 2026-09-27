@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Home, Wallet, BedDouble, Search } from "lucide-react";
+import {
+  MapPin,
+  Home,
+  Wallet,
+  BedDouble,
+  Search,
+  ChevronDown,
+} from "lucide-react";
 
-// Same look & interaction as the original site's hero search bar — but
-// wired to the real backend's actual filters (pincode/area, propertyType,
-// price range, rooms) instead of the old mock "Fresh/Resale" categories.
 const PROPERTY_TYPES = [
   { label: "Any Type", value: "" },
   { label: "For Rent", value: "rent" },
@@ -28,6 +32,7 @@ const BHK_OPTIONS = [
 
 export default function HeroSearchBar() {
   const navigate = useNavigate();
+
   const [location, setLocation] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [budgetIdx, setBudgetIdx] = useState(0);
@@ -35,76 +40,253 @@ export default function HeroSearchBar() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+
     const params = new URLSearchParams();
+
     if (location) params.set("area", location);
     if (propertyType) params.set("propertyType", propertyType);
     if (rooms) params.set("rooms", rooms);
+
     const budget = BUDGETS[budgetIdx];
+
     if (budget.min) params.set("minPrice", budget.min);
     if (budget.max) params.set("maxPrice", budget.max);
+
     navigate(`/properties?${params.toString()}`);
   };
 
   return (
     <form
       onSubmit={handleSearch}
-      className="grid w-full grid-cols-1 gap-3 rounded-2xl border border-white/30 bg-white/25 p-3 shadow-lift sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto] lg:p-2.5"
+      className="
+        mx-auto
+        flex
+        w-full
+        max-w-4xl
+        flex-col
+        overflow-hidden
+        rounded-full
+        border
+        border-white/40
+        bg-black/25
+        shadow-2xl
+        backdrop-blur-md
+        lg:flex-row
+        lg:items-center
+      "
     >
-      <label className="flex items-center gap-2 rounded-xl px-3 py-3 hover:bg-white/15 lg:border-r lg:border-white/25">
-        <MapPin size={17} className="shrink-0 text-emerald-500" />
+      {/* LOCATION */}
+      <label
+        className="
+          flex
+          min-w-0
+          flex-1
+          items-center
+          gap-2.5
+          px-5
+          py-3
+          lg:border-r
+          lg:border-white/25
+        "
+      >
+        <MapPin
+          size={17}
+          className="shrink-0 text-white"
+        />
+
         <input
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="Location (e.g. Sector 85)"
-          className="w-full bg-transparent text-sm text-white placeholder:text-white/60 focus:outline-none"
+          placeholder="Location"
+          className="
+            w-full
+            min-w-0
+            bg-transparent
+            text-sm
+            text-white
+            outline-none
+            placeholder:text-white/70
+          "
         />
       </label>
 
-      <label className="flex items-center gap-2 rounded-xl px-3 py-3 hover:bg-white/15 lg:border-r lg:border-white/25">
-        <Home size={17} className="shrink-0 text-emerald-500" />
+      {/* PROPERTY TYPE */}
+      <label
+        className="
+          relative
+          flex
+          min-w-0
+          flex-1
+          items-center
+          gap-2.5
+          px-5
+          py-3
+          lg:border-r
+          lg:border-white/25
+        "
+      >
+        <Home
+          size={17}
+          className="shrink-0 text-white"
+        />
+
         <select
           value={propertyType}
           onChange={(e) => setPropertyType(e.target.value)}
-          className="w-full appearance-none bg-transparent text-sm text-white focus:outline-none"
+          className="
+            w-full
+            min-w-0
+            appearance-none
+            bg-transparent
+            pr-5
+            text-sm
+            text-white
+            outline-none
+          "
         >
-          {PROPERTY_TYPES.map((t) => (
-            <option key={t.label} value={t.value}>{t.label}</option>
+          {PROPERTY_TYPES.map((type) => (
+            <option
+              key={type.label}
+              value={type.value}
+              className="text-black"
+            >
+              {type.label}
+            </option>
           ))}
         </select>
+
+        <ChevronDown
+          size={14}
+          className="pointer-events-none absolute right-4 text-white/70"
+        />
       </label>
 
-      <label className="flex items-center gap-2 rounded-xl px-3 py-3 hover:bg-white/15 lg:border-r lg:border-white/25">
-        <Wallet size={17} className="shrink-0 text-emerald-500" />
+      {/* BUDGET */}
+      <label
+        className="
+          relative
+          flex
+          min-w-0
+          flex-1
+          items-center
+          gap-2.5
+          px-5
+          py-3
+          lg:border-r
+          lg:border-white/25
+        "
+      >
+        <Wallet
+          size={17}
+          className="shrink-0 text-white"
+        />
+
         <select
           value={budgetIdx}
           onChange={(e) => setBudgetIdx(Number(e.target.value))}
-          className="w-full appearance-none bg-transparent text-sm text-white focus:outline-none"
+          className="
+            w-full
+            min-w-0
+            appearance-none
+            bg-transparent
+            pr-5
+            text-sm
+            text-white
+            outline-none
+          "
         >
-          {BUDGETS.map((b, i) => (
-            <option key={b.label} value={i}>{b.label}</option>
+          {BUDGETS.map((budget, index) => (
+            <option
+              key={budget.label}
+              value={index}
+              className="text-black"
+            >
+              {budget.label}
+            </option>
           ))}
         </select>
+
+        <ChevronDown
+          size={14}
+          className="pointer-events-none absolute right-4 text-white/70"
+        />
       </label>
 
-      <label className="flex items-center gap-2 rounded-xl px-3 py-3 hover:bg-white/15">
-        <BedDouble size={17} className="shrink-0 text-emerald-500" />
+      {/* BHK */}
+      <label
+        className="
+          relative
+          flex
+          min-w-0
+          flex-1
+          items-center
+          gap-2.5
+          px-5
+          py-3
+        "
+      >
+        <BedDouble
+          size={17}
+          className="shrink-0 text-white"
+        />
+
         <select
           value={rooms}
           onChange={(e) => setRooms(e.target.value)}
-          className="w-full appearance-none bg-transparent text-sm text-white focus:outline-none"
+          className="
+            w-full
+            min-w-0
+            appearance-none
+            bg-transparent
+            pr-5
+            text-sm
+            text-white
+            outline-none
+          "
         >
-          {BHK_OPTIONS.map((b) => (
-            <option key={b.label} value={b.value}>{b.label}</option>
+          {BHK_OPTIONS.map((bhk) => (
+            <option
+              key={bhk.label}
+              value={bhk.value}
+              className="text-black"
+            >
+              {bhk.label}
+            </option>
           ))}
         </select>
+
+        <ChevronDown
+          size={14}
+          className="pointer-events-none absolute right-4 text-white/70"
+        />
       </label>
 
+      {/* SEARCH BUTTON */}
       <button
         type="submit"
-        className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+        className="
+          m-1
+          flex
+          shrink-0
+          items-center
+          justify-center
+          gap-2
+          rounded-full
+          bg-white
+          px-6
+          py-3
+          text-sm
+          font-semibold
+          text-[#1f2937]
+          transition-all
+          duration-200
+          hover:bg-white/90
+          hover:scale-[1.02]
+          active:scale-[0.98]
+        "
       >
         <Search size={16} />
-        Search Properties
+        <span>Search</span>
       </button>
     </form>
   );
