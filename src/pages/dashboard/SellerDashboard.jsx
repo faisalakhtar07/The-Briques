@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { getMyProperties, createProperty } from "../../api/properties.js";
+import { getMyProperties, createProperty, updateMyProperty, updateMyPropertyPrice } from "../../api/properties.js";
 import { getPublicSettings } from "../../api/settings.js";
 import { getMyNotifications } from "../../api/notifications.js";
 import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx";
-import { X, PlusCircle, IndianRupee, AlertTriangle, Bell, Camera, Images } from "lucide-react";
+import { X, PlusCircle, IndianRupee, AlertTriangle, Bell, Camera, Images, Pencil } from "lucide-react";
 import { CATEGORY_OPTIONS } from "../../data/categories.js";
 
 const MAX_PHOTOS = 5;
@@ -23,6 +23,7 @@ export default function SellerDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [editingProperty, setEditingProperty] = useState(null);
 
   const load = () => {
     setLoadError("");
@@ -98,7 +99,11 @@ export default function SellerDashboard() {
       ) : (
         <div className="space-y-4">
           {properties.map((p) => (
-            <div key={p._id} className="bg-white rounded-xl2 shadow-card p-4 flex gap-4 items-center">
+            <div
+              key={p._id}
+              onClick={() => setEditingProperty(p)}
+              className="bg-white rounded-xl2 shadow-card p-4 flex gap-4 items-center cursor-pointer hover:ring-2 hover:ring-emerald-500/40 transition-shadow"
+            >
               <div className="w-24 h-20 rounded-lg overflow-hidden bg-paper-dim flex-shrink-0">
                 {p.images?.[0]?.url && <img src={p.images[0].url} alt="" className="w-full h-full object-cover" />}
               </div>
@@ -125,11 +130,193 @@ export default function SellerDashboard() {
                   <IndianRupee className="w-3.5 h-3.5" /> {p.displayPrice?.toLocaleString("en-IN")}
                   {p.status === "approved" && <span className="text-xs text-ink-soft ml-1">(admin-approved)</span>}
                 </p>
+                <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                  <Pencil className="w-3 h-3" /> Edit
+                </span>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {editingProperty && (
+        <EditPropertyModal
+          property={editingProperty}
+          onClose={() => setEditingProperty(null)}
+          onSaved={() => { setEditingProperty(null); load(); }}
+        />
+      )}
+    </div>
+  );
+}
+
+function EditPropertyModal({ property, onClose, onSaved }) {
+  const canEditDetails = property.status !== "approved";
+
+  const [details, setDetails] = useState({
+    title: property.title,
+    description: property.description,
+    rooms: property.rooms,
+    address: property.address,
+    pincode: property.pincode,
+    area: property.area || "",
+    city: property.city,
+    propertyType: property.propertyType,
+    category: property.category || "other",
+  });
+  const [priceForm, setPriceForm] = useState({
+    sellerPrice: property.sellerPrice,
+    discount: property.discount || 0,
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const savePrice = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+    setSuccess("");
+    try {
+      await updateMyPropertyPrice(property._id, priceForm);
+      setSuccess("Price updated.");
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not update price.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const saveDetails = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+    try {
+      await updateMyProperty(property._id, details);
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not save changes.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-t-2xl sm:rounded-xl2 w-full sm:max-w-lg max-h-[90vh] overflow-y-auto p-5"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-display font-semibold text-lg">{property.title}</h3>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-black/5">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+        {success && <p className="text-emerald-600 text-sm mb-3">{success}</p>}
+
+        {/* Price — editable regardless of approval status; goes live immediately. */}
+        <form onSubmit={savePrice} className="space-y-3 border border-black/10 rounded-lg p-4 mb-4">
+          <p className="text-sm font-semibold">Update Price</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-ink-soft">Your Price (₹)</label>
+              <input type="number" min="1" value={priceForm.sellerPrice}
+                onChange={(e) => setPriceForm({ ...priceForm, sellerPrice: Number(e.target.value) })}
+                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs text-ink-soft">Discount (%)</label>
+              <input type="number" min="0" max="100" value={priceForm.discount}
+                onChange={(e) => setPriceForm({ ...priceForm, discount: Number(e.target.value) })}
+                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+            </div>
+          </div>
+          <button disabled={saving} type="submit"
+            className="w-full rounded-full bg-emerald-600 text-white text-sm font-semibold py-2 hover:bg-emerald-700 disabled:opacity-60">
+            {saving ? "Saving..." : "Save Price"}
+          </button>
+        </form>
+
+        {/* Other details — only while not yet approved; matches the backend
+            rule that an approved, live listing's details go through Admin. */}
+        {canEditDetails ? (
+          <form onSubmit={saveDetails} className="space-y-3 border border-black/10 rounded-lg p-4">
+            <p className="text-sm font-semibold">Edit Details</p>
+            <p className="text-xs text-ink-soft -mt-2">Saving these will send the listing back for re-review.</p>
+            <div>
+              <label className="text-xs text-ink-soft">Title</label>
+              <input value={details.title} onChange={(e) => setDetails({ ...details, title: e.target.value })}
+                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs text-ink-soft">Description</label>
+              <textarea rows={3} value={details.description} onChange={(e) => setDetails({ ...details, description: e.target.value })}
+                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-ink-soft">City</label>
+                <input value={details.city} onChange={(e) => setDetails({ ...details, city: e.target.value })}
+                  className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label className="text-xs text-ink-soft">Pincode</label>
+                <input value={details.pincode} onChange={(e) => setDetails({ ...details, pincode: e.target.value })}
+                  className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-ink-soft">Area</label>
+              <input value={details.area} onChange={(e) => setDetails({ ...details, area: e.target.value })}
+                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs text-ink-soft">Address</label>
+              <input value={details.address} onChange={(e) => setDetails({ ...details, address: e.target.value })}
+                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+            </div>
+            {details.propertyType !== "event" && (
+              <div>
+                <label className="text-xs text-ink-soft">Rooms</label>
+                <input type="number" min="0" value={details.rooms} onChange={(e) => setDetails({ ...details, rooms: Number(e.target.value) })}
+                  className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm" />
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-ink-soft">Type</label>
+                <select value={details.propertyType} onChange={(e) => setDetails({ ...details, propertyType: e.target.value })}
+                  className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm">
+                  <option value="rent">Rent</option>
+                  <option value="sell">Sell</option>
+                  <option value="event">Event Space (per day)</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-ink-soft">Category</label>
+                <select value={details.category} onChange={(e) => setDetails({ ...details, category: e.target.value })}
+                  className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm">
+                  {CATEGORY_OPTIONS.map((c) => (
+                    <option key={c.value} value={c.value}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <button disabled={saving} type="submit"
+              className="w-full rounded-full bg-ink text-white text-sm font-semibold py-2 hover:opacity-90 disabled:opacity-60">
+              {saving ? "Saving..." : "Save Details"}
+            </button>
+          </form>
+        ) : (
+          <p className="text-xs text-ink-soft border border-black/10 rounded-lg p-4">
+            This listing is already approved and live — title, description, and other details can only be changed by Admin. Price above is the exception.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

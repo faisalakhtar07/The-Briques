@@ -9,3 +9,4 @@ export const getMyProperties = () => api.get("/properties/seller/mine");
 export const createProperty = (formData) =>
   api.post("/properties", formData, { headers: { "Content-Type": "multipart/form-data" } });
 export const updateMyProperty = (id, data) => api.patch(`/properties/seller/${id}`, data);
+export const updateMyPropertyPrice = (id, data) => api.patch(`/properties/seller/${id}/price`, data);
