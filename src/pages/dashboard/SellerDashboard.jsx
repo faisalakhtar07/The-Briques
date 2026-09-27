@@ -4,7 +4,7 @@ import { getMyProperties, createProperty } from "../../api/properties.js";
 import { getPublicSettings } from "../../api/settings.js";
 import { getMyNotifications } from "../../api/notifications.js";
 import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx";
-import { Upload, X, PlusCircle, IndianRupee, AlertTriangle, Bell } from "lucide-react";
+import { X, PlusCircle, IndianRupee, AlertTriangle, Bell, Camera, Images } from "lucide-react";
 import { CATEGORY_OPTIONS } from "../../data/categories.js";
 
 const MAX_PHOTOS = 5;
@@ -249,12 +249,25 @@ function PropertyForm({ onCreated }) {
 
       <div>
         <label className="text-sm font-medium">Photos (max {MAX_PHOTOS})</label>
-        <label className="mt-1 flex items-center gap-2 justify-center border-2 border-dashed border-black/15 rounded-lg py-4 cursor-pointer hover:border-emerald-500">
-          <Upload className="w-4 h-4 text-ink-soft" />
-          <span className="text-sm text-ink-soft">Tap to upload from your phone/gallery</span>
-          <input type="file" accept="image/*" multiple capture="environment" className="hidden"
-            onChange={(e) => handleFiles(e.target.files)} />
-        </label>
+        {/* Two separate inputs — one that explicitly asks for the camera
+            (capture="environment") and one plain gallery input. On some
+            installed/PWA WebViews, a single generic file input jumps
+            straight to the camera and hides the gallery option entirely —
+            splitting them gives a direct, unambiguous path to each. */}
+        <div className="mt-1 grid grid-cols-2 gap-2">
+          <label className="flex items-center gap-2 justify-center border-2 border-dashed border-black/15 rounded-lg py-4 cursor-pointer hover:border-emerald-500">
+            <Images className="w-4 h-4 text-ink-soft" />
+            <span className="text-sm text-ink-soft">Choose from Gallery</span>
+            <input type="file" accept="image/*" multiple className="hidden"
+              onChange={(e) => handleFiles(e.target.files)} />
+          </label>
+          <label className="flex items-center gap-2 justify-center border-2 border-dashed border-black/15 rounded-lg py-4 cursor-pointer hover:border-emerald-500">
+            <Camera className="w-4 h-4 text-ink-soft" />
+            <span className="text-sm text-ink-soft">Take Photo</span>
+            <input type="file" accept="image/*" capture="environment" className="hidden"
+              onChange={(e) => handleFiles(e.target.files)} />
+          </label>
+        </div>
         {images.length > 0 && (
           <div className="flex gap-2 mt-3 flex-wrap">
             {images.map((img, i) => (

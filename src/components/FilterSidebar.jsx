@@ -4,7 +4,7 @@ export default function FilterSidebar({ filters, onChange }) {
   const update = (key, value) => onChange({ ...filters, [key]: value });
 
   return (
-    <aside className="bg-white rounded-xl2 shadow-card p-5 space-y-5 h-fit sticky top-20">
+    <aside className="bg-white rounded-xl2 shadow-card p-5 space-y-5 h-fit md:sticky md:top-20">
       <div>
         <label className="text-sm font-semibold text-ink">City</label>
         <input
