@@ -6,6 +6,7 @@ import { getPublicSettings } from "../api/settings.js";
 import { initiateBooking, verifyBookingPayment } from "../api/bookings.js";
 import { openRazorpayCheckout } from "../hooks/useRazorpay.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import ImageLightbox from "../components/ImageLightbox.jsx";
 
 // This page NEVER receives or displays a seller phone number — the API
 // endpoint it calls (public /properties/:id) doesn't return one at all.
@@ -24,6 +25,7 @@ export default function PropertyDetails() {
   const [requestError, setRequestError] = useState("");
   const [requested, setRequested] = useState(false);
   const [leadFee, setLeadFee] = useState({ enabled: false, amount: 0 });
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     getPropertyById(id)
@@ -88,7 +90,10 @@ export default function PropertyDetails() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
-        <div className="rounded-xl2 overflow-hidden bg-paper-dim h-96">
+        <div
+          onClick={() => property.images?.length && setLightboxOpen(true)}
+          className="rounded-xl2 overflow-hidden bg-paper-dim h-96 cursor-zoom-in"
+        >
           {property.images?.[activeImg]?.url && (
             <img src={property.images[activeImg].url} alt={property.title} className="w-full h-full object-cover" />
           )}
@@ -105,6 +110,15 @@ export default function PropertyDetails() {
               </button>
             ))}
           </div>
+        )}
+
+        {lightboxOpen && property.images?.length > 0 && (
+          <ImageLightbox
+            images={property.images}
+            index={activeImg}
+            onIndexChange={setActiveImg}
+            onClose={() => setLightboxOpen(false)}
+          />
         )}
 
         <h1 className="text-2xl font-display font-bold mt-6">{property.title}</h1>
