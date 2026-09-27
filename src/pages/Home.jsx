@@ -182,37 +182,8 @@ export default function Home() {
 
 
       {/* =====================================================
-          DISCOVER REAL BUILDER FLOORS
-          FIRST SECTION AFTER HEADER / STATS
-      ===================================================== */}
-
-      <section className="py-16 bg-paper">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
-          <SectionHeading
-            eyebrow="Live Inventory"
-            title="Discover Real Builder Floors"
-            align="left"
-          />
-
-          <PropertyGrid
-            properties={properties}
-            loading={loading}
-          />
-
-          <div className="flex justify-center">
-            <Button
-              to="/properties"
-              variant="primary"
-            >
-              View All Properties
-            </Button>
-          </div>
-        </div>
-      </section>
-
-
-      {/* =====================================================
           BROWSE BY TYPE / CATEGORY / CITY
+          FIRST SECTION AFTER HEADER / STATS
       ===================================================== */}
 
       <section className="py-16 bg-white">
@@ -247,6 +218,35 @@ export default function Home() {
               <CategoryChips items={browseChips.cities} />
             </div>
           )}
+        </div>
+      </section>
+
+
+      {/* =====================================================
+          DISCOVER REAL BUILDER FLOORS
+      ===================================================== */}
+
+      <section className="py-16 bg-paper">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col gap-14">
+          <SectionHeading
+            eyebrow="Live Inventory"
+            title="Discover Real Builder Floors"
+            align="left"
+          />
+
+          <PropertyGrid
+            properties={properties}
+            loading={loading}
+          />
+
+          <div className="flex justify-center">
+            <Button
+              to="/properties"
+              variant="primary"
+            >
+              View All Properties
+            </Button>
+          </div>
         </div>
       </section>
 
