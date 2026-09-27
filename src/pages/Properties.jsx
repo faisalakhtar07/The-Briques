@@ -10,7 +10,9 @@ export default function Properties() {
   const [filters, setFilters] = useState({
     pincode: searchParams.get("pincode") || "",
     area: searchParams.get("area") || "",
+    city: searchParams.get("city") || "",
     propertyType: searchParams.get("propertyType") || "",
+    category: searchParams.get("category") || "",
     minPrice: searchParams.get("minPrice") || "",
     maxPrice: searchParams.get("maxPrice") || "",
     rooms: searchParams.get("rooms") || "",
@@ -29,7 +31,18 @@ export default function Properties() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-display font-bold mb-4">Browse Properties</h1>
+        <h1 className="text-2xl font-display font-bold mb-1">
+          Browse Properties
+          {filters.city ? ` in ${filters.city}` : ""}
+        </h1>
+        {(filters.propertyType || filters.category) && (
+          <p className="text-sm text-ink-soft mb-3">
+            Filtered by {[
+              filters.propertyType && { rent: "For Rent", sell: "For Sale", event: "Event Space" }[filters.propertyType],
+              filters.category,
+            ].filter(Boolean).join(" · ")}
+          </p>
+        )}
         <SearchBar value={query} onChange={setQuery} onSubmit={() => {}} />
       </div>
 

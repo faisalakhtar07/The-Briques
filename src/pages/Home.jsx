@@ -16,12 +16,13 @@ import SectionHeading from "../components/SectionHeading.jsx";
 import RoleCard from "../components/RoleCard.jsx";
 import HeroSlider from "../components/HeroSlider.jsx";
 import PropertyGrid from "../components/PropertyGrid.jsx";
+import CategoryChips from "../components/CategoryChips.jsx";
 import TestimonialCard from "../components/TestimonialCard.jsx";
 import AppPromotion from "../components/AppPromotion.jsx";
 import Button from "../components/Button.jsx";
 
 import { testimonials } from "../data/testimonials.js";
-import { getPublicProperties } from "../api/properties.js";
+import { getPublicProperties, getBrowseChips } from "../api/properties.js";
 
 
 /* =========================================================
@@ -158,11 +159,15 @@ const whyChoose = [
 export default function Home() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [browseChips, setBrowseChips] = useState({ cities: [], categories: [] });
 
   useEffect(() => {
     getPublicProperties({ limit: 3 })
       .then(({ data }) => setProperties(data.properties))
       .finally(() => setLoading(false));
+    getBrowseChips()
+      .then(({ data }) => setBrowseChips({ cities: data.cities, categories: data.categories }))
+      .catch(() => {});
   }, []);
 
   return (
@@ -202,6 +207,46 @@ export default function Home() {
               View All Properties
             </Button>
           </div>
+        </div>
+      </section>
+
+
+      {/* =====================================================
+          BROWSE BY TYPE / CATEGORY / CITY
+      ===================================================== */}
+
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col gap-10">
+          <SectionHeading
+            eyebrow="Quick Browse"
+            title="Find Exactly What You're Looking For"
+            align="left"
+          />
+
+          <div>
+            <p className="text-sm font-semibold text-ink-soft mb-3">By Type</p>
+            <CategoryChips
+              items={[
+                { propertyType: "rent", label: "For Rent" },
+                { propertyType: "sell", label: "For Sale" },
+                { propertyType: "event", label: "Event Space" },
+              ]}
+            />
+          </div>
+
+          {browseChips.categories.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold text-ink-soft mb-3">By Category</p>
+              <CategoryChips items={browseChips.categories} />
+            </div>
+          )}
+
+          {browseChips.cities.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold text-ink-soft mb-3">By City</p>
+              <CategoryChips items={browseChips.cities} />
+            </div>
+          )}
         </div>
       </section>
 

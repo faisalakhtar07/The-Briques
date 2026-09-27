@@ -8,9 +8,13 @@ import EnableNotificationsButton from "../../components/EnableNotificationsButto
 <EnableNotificationsButton />
 
 const STATUS_STYLES = {
+  awaiting_payment: "bg-slate-100 text-slate-600",
   pending: "bg-gold-50 text-gold-600",
   approved: "bg-emerald-50 text-emerald-600",
   rejected: "bg-red-50 text-red-600",
+};
+const STATUS_LABELS = {
+  awaiting_payment: "payment pending",
 };
 
 export default function BuyerDashboard() {
@@ -41,8 +45,8 @@ export default function BuyerDashboard() {
                 <li key={b._id} className="text-sm border-b border-black/5 pb-2">
                   <div className="flex justify-between items-start gap-2">
                     <span>{b.property?.title}</span>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize shrink-0 ${STATUS_STYLES[b.status]}`}>
-                      {b.status}
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize shrink-0 ${STATUS_STYLES[b.status] || "bg-slate-100 text-slate-600"}`}>
+                      {STATUS_LABELS[b.status] || b.status}
                     </span>
                   </div>
                   {b.status === "rejected" && b.rejectionReason && (

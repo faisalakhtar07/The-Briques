@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2, CalendarDays } from "lucide-react";
 import { getPropertyById } from "../api/properties.js";
-import { requestBooking } from "../api/bookings.js";
+import { getPublicSettings } from "../api/settings.js";
+import { initiateBooking, verifyBookingPayment } from "../api/bookings.js";
+import { openRazorpayCheckout } from "../hooks/useRazorpay.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 // This page NEVER receives or displays a seller phone number — the API
 // endpoint it calls (public /properties/:id) doesn't return one at all.
-// No payment happens here either — "Request to Book" only notifies Admin
-// and the pincode's Owner (with the buyer's own registered contact).
+// "Request to Book" first charges a small connect fee (see Site Settings ->
+// leadFee) via Razorpay; only once that's confirmed does Admin/Owner get
+// notified with the buyer's own registered contact. If the fee is disabled
+// site-wide, the request goes through immediately with no payment step.
 export default function PropertyDetails() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -19,6 +23,7 @@ export default function PropertyDetails() {
   const [requesting, setRequesting] = useState(false);
   const [requestError, setRequestError] = useState("");
   const [requested, setRequested] = useState(false);
+  const [leadFee, setLeadFee] = useState({ enabled: false, amount: 0 });
 
   useEffect(() => {
     getPropertyById(id)
@@ -28,6 +33,9 @@ export default function PropertyDetails() {
         const message = err.response?.data?.message || err.message;
         setError(`${message} (status: ${status})`);
       });
+    getPublicSettings()
+      .then(({ data }) => setLeadFee(data.settings.leadFee))
+      .catch(() => {});
   }, [id]);
 
   if (error) return <div className="mx-auto max-w-3xl px-4 py-16 text-center text-ink-soft">{error}</div>;
@@ -46,10 +54,30 @@ export default function PropertyDetails() {
     }
     setRequesting(true);
     try {
-      await requestBooking(property._id, isEvent ? eventDate : undefined);
+      const { data } = await initiateBooking(property._id, isEvent ? eventDate : undefined);
+
+      // Fee disabled site-wide — request already went through, nothing to pay.
+      if (!data.paymentRequired) {
+        setRequested(true);
+        return;
+      }
+
+      const rzpResponse = await openRazorpayCheckout({
+        keyId: data.keyId,
+        order: data.order,
+        name: "The Briques — Connect Fee",
+        description: `Contact request for "${property.title}"`,
+        prefill: { name: user?.name, contact: user?.phone, email: user?.email },
+      });
+
+      await verifyBookingPayment(data.bookingId, {
+        razorpay_order_id: rzpResponse.razorpay_order_id,
+        razorpay_payment_id: rzpResponse.razorpay_payment_id,
+        razorpay_signature: rzpResponse.razorpay_signature,
+      });
       setRequested(true);
     } catch (err) {
-      setRequestError(err.response?.data?.message || "Could not send your request. Please try again.");
+      setRequestError(err.response?.data?.message || err.message || "Could not send your request. Please try again.");
     } finally {
       setRequesting(false);
     }
@@ -144,10 +172,18 @@ export default function PropertyDetails() {
               disabled={requesting}
               className="mt-6 w-full flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700 disabled:opacity-60"
             >
-              {requesting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending request...</> : "Request to Book"}
+              {requesting ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> {leadFee.enabled ? "Processing payment..." : "Sending request..."}</>
+              ) : leadFee.enabled ? (
+                `Pay ₹${leadFee.amount} & Request to Book`
+              ) : (
+                "Request to Book"
+              )}
             </button>
             <p className="text-xs text-ink-soft text-center mt-2">
-              We'll share your registered phone number with our team only — never with the Seller directly.
+              {leadFee.enabled
+                ? `A small ₹${leadFee.amount} connect fee applies (non-refundable). We'll share your registered phone number with our team only — never with the Seller directly.`
+                : "We'll share your registered phone number with our team only — never with the Seller directly."}
             </p>
           </>
         ) : (

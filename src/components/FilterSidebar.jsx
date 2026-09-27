@@ -1,8 +1,20 @@
+import { CATEGORY_OPTIONS } from "../data/categories.js";
+
 export default function FilterSidebar({ filters, onChange }) {
   const update = (key, value) => onChange({ ...filters, [key]: value });
 
   return (
     <aside className="bg-white rounded-xl2 shadow-card p-5 space-y-5 h-fit sticky top-20">
+      <div>
+        <label className="text-sm font-semibold text-ink">City</label>
+        <input
+          value={filters.city || ""}
+          onChange={(e) => update("city", e.target.value)}
+          placeholder="e.g. Aurangabad"
+          className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+        />
+      </div>
+
       <div>
         <label className="text-sm font-semibold text-ink">Pincode</label>
         <input
@@ -23,6 +35,21 @@ export default function FilterSidebar({ filters, onChange }) {
           <option value="">Any</option>
           <option value="rent">For Rent</option>
           <option value="sell">For Sale</option>
+          <option value="event">Event Space (per day)</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="text-sm font-semibold text-ink">Category</label>
+        <select
+          value={filters.category || ""}
+          onChange={(e) => update("category", e.target.value)}
+          className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+        >
+          <option value="">Any</option>
+          {CATEGORY_OPTIONS.filter((c) => c.value !== "other").map((c) => (
+            <option key={c.value} value={c.value}>{c.label}</option>
+          ))}
         </select>
       </div>
 

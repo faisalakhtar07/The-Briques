@@ -5,6 +5,7 @@ import { getPublicSettings } from "../../api/settings.js";
 import { getMyNotifications } from "../../api/notifications.js";
 import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx";
 import { Upload, X, PlusCircle, IndianRupee, AlertTriangle, Bell } from "lucide-react";
+import { CATEGORY_OPTIONS } from "../../data/categories.js";
 
 const MAX_PHOTOS = 5;
 
@@ -136,8 +137,8 @@ export default function SellerDashboard() {
 function PropertyForm({ onCreated }) {
   const [minPrice, setMinPrice] = useState(8000);
   const [form, setForm] = useState({
-    title: "", description: "", rooms: 1, address: "", pincode: "", area: "",
-    propertyType: "rent", sellerPrice: 8000, discount: 0,
+    title: "", description: "", rooms: 1, address: "", pincode: "", area: "", city: "",
+    propertyType: "rent", category: "other", sellerPrice: 8000, discount: 0,
   });
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
@@ -203,6 +204,7 @@ function PropertyForm({ onCreated }) {
           <Field label="Rooms" type="number" min={0} required value={form.rooms} onChange={(v) => setForm({ ...form, rooms: v })} />
         )}
         <Field label="Address" required value={form.address} onChange={(v) => setForm({ ...form, address: v })} className="sm:col-span-2" />
+        <Field label="City" required value={form.city} onChange={(v) => setForm({ ...form, city: v })} placeholder="e.g. Aurangabad" />
         <Field label="Pincode" required value={form.pincode} onChange={(v) => setForm({ ...form, pincode: v })} />
         <Field label="Area" value={form.area} onChange={(v) => setForm({ ...form, area: v })} />
 
@@ -214,6 +216,16 @@ function PropertyForm({ onCreated }) {
             <option value="sell">Sell</option>
             <option value="event">Event Space (per day — wedding hall etc.)</option>
           </select>
+        </div>
+        <div>
+          <label className="text-sm font-medium">Category</label>
+          <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
+            className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm">
+            {CATEGORY_OPTIONS.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </select>
+          <p className="text-xs text-ink-soft mt-1">Lets buyers filter — e.g. "Marriage Hall" or "Hotel" under Event Space.</p>
         </div>
         <Field label={`Your price (₹${isEvent ? "/day" : ""}, min ${minPrice.toLocaleString("en-IN")})`}
           type="number" min={minPrice} required value={form.sellerPrice}
