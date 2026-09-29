@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { getMyProperties, createProperty, updateMyProperty, updateMyPropertyPrice } from "../../api/properties.js";
+import { getMyProperties, createProperty, updateMyProperty, updateMyPropertyPrice, updateMyPropertyImages } from "../../api/properties.js";
+import { getSellerBookings } from "../../api/bookings.js";
 import { getPublicSettings } from "../../api/settings.js";
 import { getMyNotifications } from "../../api/notifications.js";
 import EnableNotificationsButton from "../../components/EnableNotificationsButton.jsx";
-import { X, PlusCircle, IndianRupee, AlertTriangle, Bell, Camera, Images, Pencil } from "lucide-react";
+import { X, PlusCircle, IndianRupee, AlertTriangle, Bell, Camera, Images, Pencil, Trash2, BarChart3 } from "lucide-react";
 import { CATEGORY_OPTIONS } from "../../data/categories.js";
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 const MAX_PHOTOS = 5;
+const BOOKING_COLORS = { approved: "#059669", pending: "#d4a017", rejected: "#dc2626" };
 
 const STATUS_STYLES = {
   pending: "bg-gold-50 text-gold-600",
@@ -19,6 +22,7 @@ const STATUS_STYLES = {
 export default function SellerDashboard() {
   const { user } = useAuth();
   const [properties, setProperties] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -42,7 +46,17 @@ export default function SellerDashboard() {
     // "your property has been booked" alerts were being created in the
     // database correctly, but the Seller had nowhere in the UI to see them.
     getMyNotifications().then(({ data }) => setNotifications(data.notifications)).catch(() => {});
+    getSellerBookings().then(({ data }) => setBookings(data.bookings)).catch(() => {});
   }, []);
+
+  const viewsData = properties
+    .filter((p) => p.status === "approved")
+    .map((p) => ({ name: p.title.length > 14 ? `${p.title.slice(0, 14)}…` : p.title, views: p.views || 0 }));
+
+  const bookingCounts = ["approved", "pending", "rejected"].map((status) => ({
+    name: status,
+    value: bookings.filter((b) => b.status === status).length,
+  })).filter((d) => d.value > 0);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -74,6 +88,44 @@ export default function SellerDashboard() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {(viewsData.length > 0 || bookingCounts.length > 0) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          {viewsData.length > 0 && (
+            <div className="bg-white rounded-xl2 shadow-card p-5">
+              <h2 className="font-display font-semibold flex items-center gap-2 mb-4 text-sm">
+                <BarChart3 className="w-4 h-4 text-emerald-600" /> Views per Property
+              </h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={viewsData}>
+                  <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} angle={-20} textAnchor="end" height={50} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
+                  <Tooltip />
+                  <Bar dataKey="views" fill="#059669" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+          {bookingCounts.length > 0 && (
+            <div className="bg-white rounded-xl2 shadow-card p-5">
+              <h2 className="font-display font-semibold flex items-center gap-2 mb-4 text-sm">
+                <BarChart3 className="w-4 h-4 text-emerald-600" /> Booking Requests
+              </h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie data={bookingCounts} dataKey="value" nameKey="name" innerRadius={40} outerRadius={70} paddingAngle={2}>
+                    {bookingCounts.map((entry) => (
+                      <Cell key={entry.name} fill={BOOKING_COLORS[entry.name]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
       )}
 
@@ -168,9 +220,47 @@ function EditPropertyModal({ property, onClose, onSaved }) {
     sellerPrice: property.sellerPrice,
     discount: property.discount || 0,
   });
+  const [existingImages, setExistingImages] = useState(property.images || []);
+  const [removeIds, setRemoveIds] = useState([]);
+  const [newPhotos, setNewPhotos] = useState([]);
+  const [savingPhotos, setSavingPhotos] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const remainingSlots = MAX_PHOTOS - (existingImages.length - removeIds.length) - newPhotos.length;
+
+  const toggleRemove = (publicId) => {
+    setRemoveIds((prev) => (prev.includes(publicId) ? prev.filter((id) => id !== publicId) : [...prev, publicId]));
+  };
+
+  const handleAddPhotos = (e) => {
+    const files = Array.from(e.target.files || []);
+    setNewPhotos((prev) => [...prev, ...files].slice(0, prev.length + remainingSlots));
+    e.target.value = "";
+  };
+
+  const savePhotos = async (e) => {
+    e.preventDefault();
+    setSavingPhotos(true);
+    setError("");
+    setSuccess("");
+    try {
+      const formData = new FormData();
+      removeIds.forEach((id) => formData.append("removeIds", id));
+      newPhotos.forEach((file) => formData.append("images", file));
+      const { data } = await updateMyPropertyImages(property._id, formData);
+      setExistingImages(data.property.images);
+      setRemoveIds([]);
+      setNewPhotos([]);
+      setSuccess("Photos updated — listing sent back for re-review.");
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not update photos.");
+    } finally {
+      setSavingPhotos(false);
+    }
+  };
 
   const savePrice = async (e) => {
     e.preventDefault();
@@ -240,6 +330,58 @@ function EditPropertyModal({ property, onClose, onSaved }) {
             {saving ? "Saving..." : "Save Price"}
           </button>
         </form>
+
+        {/* Photos — same "not yet approved" rule as details, since adding/
+            removing photos sends the listing back for re-review too. */}
+        {canEditDetails && (
+          <form onSubmit={savePhotos} className="space-y-3 border border-black/10 rounded-lg p-4 mb-4">
+            <p className="text-sm font-semibold flex items-center gap-2"><Images className="w-4 h-4" /> Manage Photos</p>
+            <div className="grid grid-cols-3 gap-2">
+              {existingImages.map((img) => {
+                const marked = removeIds.includes(img.publicId);
+                return (
+                  <div key={img.publicId} className={`relative rounded-lg overflow-hidden aspect-square ${marked ? "opacity-40" : ""}`}>
+                    <img src={img.url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => toggleRemove(img.publicId)}
+                      className="absolute top-1 right-1 bg-white/90 rounded-full p-1"
+                      title={marked ? "Undo remove" : "Remove photo"}
+                    >
+                      {marked ? <PlusCircle className="w-3.5 h-3.5 text-emerald-600" /> : <Trash2 className="w-3.5 h-3.5 text-red-600" />}
+                    </button>
+                  </div>
+                );
+              })}
+              {newPhotos.map((file, i) => (
+                <div key={i} className="relative rounded-lg overflow-hidden aspect-square border border-dashed border-emerald-400">
+                  <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setNewPhotos((prev) => prev.filter((_, idx) => idx !== i))}
+                    className="absolute top-1 right-1 bg-white/90 rounded-full p-1"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                  </button>
+                </div>
+              ))}
+              {remainingSlots > 0 && (
+                <label className="flex items-center justify-center aspect-square rounded-lg border border-dashed border-black/20 cursor-pointer text-ink-soft hover:border-emerald-500">
+                  <Camera className="w-5 h-5" />
+                  <input type="file" accept="image/*" multiple hidden onChange={handleAddPhotos} />
+                </label>
+              )}
+            </div>
+            <p className="text-xs text-ink-soft">Up to {MAX_PHOTOS} photos total. At least one must remain.</p>
+            <button
+              disabled={savingPhotos || (removeIds.length === 0 && newPhotos.length === 0)}
+              type="submit"
+              className="w-full rounded-full bg-emerald-600 text-white text-sm font-semibold py-2 hover:bg-emerald-700 disabled:opacity-60"
+            >
+              {savingPhotos ? "Saving..." : "Save Photos"}
+            </button>
+          </form>
+        )}
 
         {/* Other details — only while not yet approved; matches the backend
             rule that an approved, live listing's details go through Admin. */}

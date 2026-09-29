@@ -1,13 +1,27 @@
 import { Link } from "react-router-dom";
-import { BedDouble, MapPin, Tag } from "lucide-react";
+import { BedDouble, MapPin, Tag, Heart } from "lucide-react";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useSaved } from "../context/SavedContext.jsx";
 
 // PUBLIC card: only ever renders fields the backend already restricted to
 // public/buyer-safe data. No seller name, no phone — it isn't even in the
 // API response for this endpoint (see propertyController.PUBLIC_FIELDS).
 export default function PropertyCard({ property }) {
+  const { user } = useAuth();
+  const saved = useSaved();
+
   const finalPrice = property.discount
     ? Math.round(property.displayPrice * (1 - property.discount / 100))
     : property.displayPrice;
+
+  const isBuyer = user?.role === "buyer";
+  const isSaved = isBuyer && saved?.isSaved(property._id);
+
+  const handleHeartClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isBuyer) saved?.toggle(property._id);
+  };
 
   return (
     <Link
@@ -29,6 +43,16 @@ export default function PropertyCard({ property }) {
           <span className="absolute top-3 right-3 rounded-full bg-gold-500 text-ink text-xs font-bold px-3 py-1 flex items-center gap-1">
             <Tag className="w-3 h-3" /> {property.discount}% OFF
           </span>
+        )}
+        {isBuyer && (
+          <button
+            type="button"
+            onClick={handleHeartClick}
+            aria-label={isSaved ? "Remove from saved" : "Save property"}
+            className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur hover:bg-white transition-colors"
+          >
+            <Heart className={`w-4 h-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-ink-soft"}`} />
+          </button>
         )}
       </div>
 

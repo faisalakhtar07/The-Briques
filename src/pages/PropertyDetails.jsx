@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2, CalendarDays } from "lucide-react";
+import { Helmet } from "react-helmet-async";
+import { BedDouble, MapPin, Tag, ShieldCheck, Loader2, CheckCircle2, CalendarDays, Navigation } from "lucide-react";
 import { getPropertyById } from "../api/properties.js";
 import { getPublicSettings } from "../api/settings.js";
 import { initiateBooking, verifyBookingPayment } from "../api/bookings.js";
 import { openRazorpayCheckout } from "../hooks/useRazorpay.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import ImageLightbox from "../components/ImageLightbox.jsx";
+import ShareButton from "../components/ShareButton.jsx";
+import { addRecentlyViewed } from "../utils/recentlyViewed.js";
 
 // This page NEVER receives or displays a seller phone number — the API
 // endpoint it calls (public /properties/:id) doesn't return one at all.
@@ -29,7 +32,10 @@ export default function PropertyDetails() {
 
   useEffect(() => {
     getPropertyById(id)
-      .then(({ data }) => setProperty(data.property))
+      .then(({ data }) => {
+        setProperty(data.property);
+        addRecentlyViewed(data.property._id);
+      })
       .catch((err) => {
         const status = err.response?.status ?? "no response (network/CORS error)";
         const message = err.response?.data?.message || err.message;
@@ -86,9 +92,18 @@ export default function PropertyDetails() {
   };
 
   const todayStr = new Date().toISOString().split("T")[0];
+  const mapsQuery = encodeURIComponent(`${property.address}, ${property.area || ""} ${property.pincode}`);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <Helmet>
+        <title>{property.title} — The Briques</title>
+        <meta name="description" content={property.description?.slice(0, 155)} />
+        <meta property="og:title" content={property.title} />
+        <meta property="og:description" content={property.description?.slice(0, 155)} />
+        {property.images?.[0]?.url && <meta property="og:image" content={property.images[0].url} />}
+        <meta property="og:type" content="product" />
+      </Helmet>
       <div className="lg:col-span-2">
         <div
           onClick={() => property.images?.length && setLightboxOpen(true)}
@@ -125,6 +140,14 @@ export default function PropertyDetails() {
         <p className="text-ink-soft flex items-center gap-1 mt-1">
           <MapPin className="w-4 h-4" /> {property.address}, {property.area} — {property.pincode}
         </p>
+        <a
+          href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline mt-1"
+        >
+          <Navigation className="w-3.5 h-3.5" /> View on Google Maps
+        </a>
 
         <div className="flex gap-6 mt-4 text-sm text-ink-soft">
           {!isEvent && (
@@ -134,6 +157,8 @@ export default function PropertyDetails() {
         </div>
 
         <p className="mt-6 text-ink leading-relaxed">{property.description}</p>
+
+        <ShareButton title={property.title} className="mt-6 w-full sm:w-auto" />
       </div>
 
       <div className="bg-white rounded-xl2 shadow-card p-6 h-fit sticky top-20">

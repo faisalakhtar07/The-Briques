@@ -8,8 +8,11 @@ import {
   User,
   LogOut,
   ArrowUpRight,
+  Heart,
+  Languages,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const navLink = ({ isActive }) =>
   `relative px-3 py-2 text-sm font-medium transition-colors ${
@@ -21,6 +24,7 @@ const navLink = ({ isActive }) =>
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { lang, toggleLang, t } = useLanguage();
   const navigate = useNavigate();
 
   const dashboardPath =
@@ -85,10 +89,26 @@ export default function Navbar() {
 
           {/* DESKTOP RIGHT */}
           <div className="hidden items-center gap-3 md:flex">
+            <button
+              onClick={toggleLang}
+              aria-label="Toggle language"
+              className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-ink-soft transition hover:bg-black/5 hover:text-emerald-600"
+            >
+              <Languages className="h-4 w-4" /> {lang === "en" ? "हिं" : "EN"}
+            </button>
             <InstallAppButton />
 
             {user ? (
               <>
+                {user.role === "buyer" && (
+                  <Link
+                    to="/saved"
+                    className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-black/5 hover:text-emerald-600"
+                  >
+                    <Heart className="h-4 w-4" />
+                    {t("Saved")}
+                  </Link>
+                )}
                 <Link
                   to={dashboardPath}
                   className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-black/5 hover:text-emerald-600"
@@ -102,7 +122,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-red-50 hover:text-red-600"
                 >
                   <LogOut className="h-4 w-4" />
-                  Logout
+                  {t("Logout")}
                 </button>
               </>
             ) : (
@@ -243,10 +263,26 @@ export default function Navbar() {
 
           {/* BOTTOM AREA */}
           <div className="mt-auto border-t border-black/5 pt-5">
+            <button
+              onClick={toggleLang}
+              className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-black/10 px-4 py-3 text-sm font-semibold text-ink-soft"
+            >
+              <Languages className="h-4 w-4" /> {lang === "en" ? "हिंदी में देखें" : "View in English"}
+            </button>
             <InstallAppButton />
 
             {user ? (
               <div className="mt-4 space-y-2">
+                {user.role === "buyer" && (
+                  <Link
+                    to="/saved"
+                    onClick={closeMenu}
+                    className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-sm font-semibold text-ink shadow-sm"
+                  >
+                    <Heart className="h-4 w-4 text-red-500" />
+                    {t("Saved")}
+                  </Link>
+                )}
                 <Link
                   to={dashboardPath}
                   onClick={closeMenu}

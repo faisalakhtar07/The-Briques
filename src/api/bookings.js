@@ -10,6 +10,7 @@ export const initiateBooking = (propertyId, eventDate) =>
 export const verifyBookingPayment = (bookingId, razorpayResponse) =>
   api.post("/bookings/verify", { bookingId, ...razorpayResponse });
 export const getMyBookings = () => api.get("/bookings/mine");
+export const getSellerBookings = () => api.get("/bookings/seller");
 export const getOwnerBookings = () => api.get("/bookings/owner");
 export const approveBooking = (id) => api.patch(`/bookings/${id}/approve`);
 export const rejectBooking = (id, reason) => api.patch(`/bookings/${id}/reject`, { reason });

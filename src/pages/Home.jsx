@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 
 import Hero from "../components/Hero.jsx";
 import Stats from "../components/Stats.jsx";
@@ -17,6 +18,7 @@ import RoleCard from "../components/RoleCard.jsx";
 import HeroSlider from "../components/HeroSlider.jsx";
 import PropertyGrid from "../components/PropertyGrid.jsx";
 import CategoryChips from "../components/CategoryChips.jsx";
+import RecentlyViewed from "../components/RecentlyViewed.jsx";
 import TestimonialCard from "../components/TestimonialCard.jsx";
 import AppPromotion from "../components/AppPromotion.jsx";
 import Button from "../components/Button.jsx";
@@ -172,6 +174,13 @@ export default function Home() {
 
   return (
     <>
+      <Helmet>
+        <title>The Briques — Builder Floors for Sale & Rent in Delhi NCR</title>
+        <meta
+          name="description"
+          content="Buy, sell, or rent verified builder-floor properties across Faridabad and NCR. Admin-verified listings, transparent booking, no direct seller spam calls."
+        />
+      </Helmet>
       {/* =====================================================
           HERO
       ===================================================== */}
@@ -249,6 +258,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <RecentlyViewed />
 
 
       {/* =====================================================
