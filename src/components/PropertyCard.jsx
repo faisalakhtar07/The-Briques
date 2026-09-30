@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BedDouble, MapPin, Tag, Heart } from "lucide-react";
+import { BedDouble, MapPin, Tag, Heart, ArrowRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useSaved } from "../context/SavedContext.jsx";
 
@@ -69,6 +69,14 @@ export default function PropertyCard({ property }) {
           <span className="text-ink-soft text-sm flex items-center gap-1">
             <BedDouble className="w-4 h-4" /> {property.rooms} rooms
           </span>
+        </div>
+
+        {/* Styled as a button but not a real <a>/<button> — the whole card
+            is already the Link, and nesting an anchor inside an anchor is
+            invalid HTML. This just makes "click to view details" explicit
+            for anyone used to seeing a dedicated button. */}
+        <div className="mt-4 flex items-center justify-center gap-2 rounded-full bg-paper-dim group-hover:bg-emerald-600 text-ink group-hover:text-white text-sm font-semibold py-2.5 transition-colors">
+          View Details <ArrowRight className="w-4 h-4" />
         </div>
       </div>
     </Link>
