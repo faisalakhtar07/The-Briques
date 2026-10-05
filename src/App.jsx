@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import Properties from "./pages/Properties.jsx";
 import PropertyDetails from "./pages/PropertyDetails.jsx";
 import Saved from "./pages/Saved.jsx";
+import Profile from "./pages/Profile.jsx";
 import ChooseRole from "./pages/ChooseRole.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
@@ -38,6 +39,10 @@ export default function App() {
           <Route
             path="/saved"
             element={<ProtectedRoute allow={["buyer"]}><Saved /></ProtectedRoute>}
+          />
+          <Route
+            path="/profile"
+            element={<ProtectedRoute allow={["buyer", "seller", "owner"]}><Profile /></ProtectedRoute>}
           />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

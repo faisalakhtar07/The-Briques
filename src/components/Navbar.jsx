@@ -6,6 +6,7 @@ import {
   X,
   Home,
   User,
+  UserCircle2,
   LogOut,
   ArrowUpRight,
   Heart,
@@ -32,6 +33,8 @@ export default function Navbar() {
       ? "/dashboard/seller"
       : user?.role === "buyer"
       ? "/dashboard/buyer"
+      : user?.role === "owner"
+      ? "/dashboard/owner"
       : "/";
 
   const closeMenu = () => setOpen(false);
@@ -71,19 +74,19 @@ export default function Navbar() {
           {/* DESKTOP NAV */}
           <nav className="hidden items-center gap-1 md:flex">
             <NavLink to="/" className={navLink} end>
-              Home
+              {t("Home")}
             </NavLink>
 
             <NavLink to="/properties" className={navLink}>
-              Properties
+              {t("Properties")}
             </NavLink>
 
             <NavLink to="/about" className={navLink}>
-              About
+              {t("About")}
             </NavLink>
 
             <NavLink to="/contact" className={navLink}>
-              Contact
+              {t("Contact")}
             </NavLink>
           </nav>
 
@@ -115,6 +118,14 @@ export default function Navbar() {
                 >
                   <User className="h-4 w-4" />
                   {user.name?.split(" ")[0]}
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-black/5 hover:text-emerald-600"
+                >
+                  <UserCircle2 className="h-4 w-4" />
+                  {t("Profile")}
                 </Link>
 
                 <button
@@ -211,7 +222,7 @@ export default function Navbar() {
                 }`
               }
             >
-              Home
+              {t("Home")}
               <ArrowUpRight className="h-4 w-4" />
             </NavLink>
 
@@ -226,7 +237,7 @@ export default function Navbar() {
                 }`
               }
             >
-              Properties
+              {t("Properties")}
               <ArrowUpRight className="h-4 w-4" />
             </NavLink>
 
@@ -241,7 +252,7 @@ export default function Navbar() {
                 }`
               }
             >
-              About
+              {t("About")}
               <ArrowUpRight className="h-4 w-4" />
             </NavLink>
 
@@ -256,7 +267,7 @@ export default function Navbar() {
                 }`
               }
             >
-              Contact
+              {t("Contact")}
               <ArrowUpRight className="h-4 w-4" />
             </NavLink>
           </nav>
@@ -289,7 +300,16 @@ export default function Navbar() {
                   className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-sm font-semibold text-ink shadow-sm"
                 >
                   <User className="h-4 w-4 text-emerald-600" />
-                  Dashboard
+                  {t("Dashboard")}
+                </Link>
+
+                <Link
+                  to="/profile"
+                  onClick={closeMenu}
+                  className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-sm font-semibold text-ink shadow-sm"
+                >
+                  <UserCircle2 className="h-4 w-4 text-emerald-600" />
+                  {t("Profile")}
                 </Link>
 
                 <button

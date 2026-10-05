@@ -4,3 +4,31 @@
 
 html { scroll-behavior: smooth; }
 body { -webkit-font-smoothing: antialiased; }
+
+/* ---------------------------------------------------------------------
+   DARK MODE — pragmatic site-wide override, not a per-component rewrite.
+   The Tailwind palette (ink/paper/etc in tailwind.config.js) uses literal
+   hex colors, not CSS variables, so a real dark: variant on every
+   component isn't in place. Instead, this re-targets the handful of
+   utility classes used almost everywhere (backgrounds, text, borders,
+   shadows) once <html> has class="dark" (toggled by ThemeContext). It
+   covers the large majority of the site; a few one-off components with
+   unusual custom colors may still look slightly off in dark mode.
+--------------------------------------------------------------------- */
+.dark body { background-color: #121212; color: #EDEDED; }
+.dark .bg-white { background-color: #1C1C1C !important; }
+.dark .bg-paper { background-color: #121212 !important; }
+.dark .bg-paper-dim { background-color: #202020 !important; }
+.dark .text-ink { color: #EDEDED !important; }
+.dark .text-ink-soft,
+.dark .text-ink\/70,
+.dark .text-ink\/60 { color: #A3A3A3 !important; }
+.dark .border-black\/5,
+.dark .border-black\/8,
+.dark .border-black\/10 { border-color: rgba(255,255,255,0.1) !important; }
+.dark .shadow-card { box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 8px 24px -12px rgba(0,0,0,0.5) !important; }
+.dark .shadow-lift { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 24px 48px -16px rgba(0,0,0,0.6) !important; }
+.dark input,
+.dark select,
+.dark textarea { background-color: #1C1C1C; color: #EDEDED; border-color: rgba(255,255,255,0.12); }
+.dark ::placeholder { color: #7A7A7A; }

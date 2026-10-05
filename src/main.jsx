@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { SavedProvider } from "./context/SavedContext.jsx";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -13,11 +14,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <HelmetProvider>
       <BrowserRouter>
         <AuthProvider>
-          <LanguageProvider>
-            <SavedProvider>
-              <App />
-            </SavedProvider>
-          </LanguageProvider>
+          <ThemeProvider>
+            <LanguageProvider>
+              <SavedProvider>
+                <App />
+              </SavedProvider>
+            </LanguageProvider>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>

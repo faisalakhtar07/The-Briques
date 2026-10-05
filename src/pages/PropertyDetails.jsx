@@ -10,6 +10,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import ImageLightbox from "../components/ImageLightbox.jsx";
 import ShareButton from "../components/ShareButton.jsx";
 import { addRecentlyViewed } from "../utils/recentlyViewed.js";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 // This page NEVER receives or displays a seller phone number — the API
 // endpoint it calls (public /properties/:id) doesn't return one at all.
@@ -20,6 +21,7 @@ import { addRecentlyViewed } from "../utils/recentlyViewed.js";
 export default function PropertyDetails() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [property, setProperty] = useState(null);
   const [activeImg, setActiveImg] = useState(0);
   const [error, setError] = useState("");
@@ -146,24 +148,24 @@ export default function PropertyDetails() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline mt-1"
         >
-          <Navigation className="w-3.5 h-3.5" /> View on Google Maps
+          <Navigation className="w-3.5 h-3.5" /> {t("View on Google Maps")}
         </a>
 
         <div className="flex gap-6 mt-4 text-sm text-ink-soft">
           {!isEvent && (
-            <span className="flex items-center gap-1"><BedDouble className="w-4 h-4" /> {property.rooms} rooms</span>
+            <span className="flex items-center gap-1"><BedDouble className="w-4 h-4" /> {property.rooms} {t("rooms")}</span>
           )}
-          <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600" /> Admin verified</span>
+          <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600" /> {t("Admin verified")}</span>
         </div>
 
         <p className="mt-6 text-ink leading-relaxed">{property.description}</p>
 
-        <ShareButton title={property.title} className="mt-6 w-full sm:w-auto" />
+        <ShareButton title={property.title} propertyId={property._id} className="mt-6 w-full sm:w-auto" />
       </div>
 
       <div className="bg-white rounded-xl2 shadow-card p-6 h-fit sticky top-20">
         <span className="inline-block rounded-full bg-emerald-600 text-white text-xs font-semibold px-3 py-1 uppercase mb-3">
-          {property.propertyType === "rent" ? "For Rent" : isEvent ? "Event Space" : "For Sale"}
+          {property.propertyType === "rent" ? t("For Rent") : isEvent ? t("Event Space") : t("For Sale")}
         </span>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-emerald-700">₹{finalPrice?.toLocaleString("en-IN")}</span>
@@ -172,21 +174,21 @@ export default function PropertyDetails() {
         </div>
         {property.discount > 0 && (
           <p className="text-sm text-gold-600 flex items-center gap-1 mt-1">
-            <Tag className="w-3.5 h-3.5" /> {property.discount}% off original price
+            <Tag className="w-3.5 h-3.5" /> {property.discount}% {t("off original price")}
           </p>
         )}
 
         {property.isBooked && !isEvent ? (
           <div className="mt-6 rounded-xl bg-paper-dim p-4 text-center text-sm text-ink-soft">
-            This property has already been booked.
+            {t("This property has already been booked.")}
           </div>
         ) : requested ? (
           <div className="mt-6 flex flex-col items-center gap-2 rounded-xl bg-emerald-50 p-4 text-center">
             <CheckCircle2 className="w-8 h-8 text-emerald-600" />
-            <p className="font-semibold text-emerald-800">Request sent!</p>
+            <p className="font-semibold text-emerald-800">{t("Request sent!")}</p>
             <p className="text-xs text-ink-soft">
-              Our team will review and get in touch with you. Track this in your{" "}
-              <Link to="/dashboard/buyer" className="text-emerald-700 underline">dashboard</Link>.
+              {t("Our team will review and get in touch with you. Track this in your")}{" "}
+              <Link to="/dashboard/buyer" className="text-emerald-700 underline">{t("dashboard")}</Link>.
             </p>
           </div>
         ) : user?.role === "buyer" ? (
@@ -194,7 +196,7 @@ export default function PropertyDetails() {
             {isEvent && (
               <div className="mt-4">
                 <label className="text-sm font-medium text-ink flex items-center gap-1.5">
-                  <CalendarDays className="w-4 h-4 text-emerald-600" /> Choose your date
+                  <CalendarDays className="w-4 h-4 text-emerald-600" /> {t("Choose your date")}
                 </label>
                 <input
                   type="date"
@@ -212,17 +214,17 @@ export default function PropertyDetails() {
               className="mt-6 w-full flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700 disabled:opacity-60"
             >
               {requesting ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> {leadFee.enabled ? "Processing payment..." : "Sending request..."}</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> {leadFee.enabled ? t("Processing payment...") : t("Sending request...")}</>
               ) : leadFee.enabled ? (
-                `Pay ₹${leadFee.amount} & Request to Book`
+                `${t("Pay")} ₹${leadFee.amount} ${t("& Request to Book")}`
               ) : (
-                "Request to Book"
+                t("Request to Book")
               )}
             </button>
             <p className="text-xs text-ink-soft text-center mt-2">
               {leadFee.enabled
-                ? `A small ₹${leadFee.amount} connect fee applies (non-refundable). We'll share your registered phone number with our team only — never with the Seller directly.`
-                : "We'll share your registered phone number with our team only — never with the Seller directly."}
+                ? `${t("A small")} ₹${leadFee.amount} ${t("connect fee applies (non-refundable).")} ${t("We'll share your registered phone number with our team only — never with the Seller directly.")}`
+                : t("We'll share your registered phone number with our team only — never with the Seller directly.")}
             </p>
           </>
         ) : (
@@ -230,11 +232,11 @@ export default function PropertyDetails() {
             to="/login"
             className="mt-6 block text-center rounded-full bg-emerald-600 text-white font-semibold py-3 hover:bg-emerald-700"
           >
-            Login as Buyer to Request
+            {t("Login as Buyer to Request")}
           </Link>
         )}
         <p className="text-xs text-ink-soft text-center mt-3">
-          For your privacy and safety, seller contact details are managed by our platform.
+          {t("For your privacy and safety, seller contact details are managed by our platform.")}
         </p>
       </div>
     </div>
